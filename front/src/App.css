@@ -1,0 +1,62 @@
+.app {
+    text-align: center;
+
+    height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(0 0 0 / 30%);
+    background-color: #c0392b
+}
+
+header img {
+    height: 50px;
+}
+
+header .nav {
+    display: flex;
+    align-items: center;
+}
+
+header .avatar {
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.login-form {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+input {
+    width: calc(100% - 18px);
+    margin-bottom: 16px;
+    border: 1px solid rgb(0 0 0 / 30%);
+    border-radius: 4px;
+    padding: 8px;
+}
+
+button {
+    padding: 8px 24px;
+    border: 1px solid rgb(0 0 0 / 30%);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.25s;
+    height: 100%;
+}
+
+button:hover {
+    background-color: lightgray;
+}
+
+.profile p {
+    margin-top: .2em;
+}
+
+.profile img {
+    margin-bottom: 1em;
+    border-radius: 4px;
+    box-shadow: 0 0 3px 0 black;
+}
