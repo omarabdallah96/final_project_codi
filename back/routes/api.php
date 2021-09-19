@@ -29,8 +29,12 @@ Route::post('/login', ['App\Http\Controllers\AuthController', 'login']);
 
 Route::group(['middleware' => ['jwt.user']], function() {
     Route::post('/logout', ['App\Http\Controllers\AuthController', 'logout']);
-
     Route::resource('blogs', '\App\Http\Controllers\BlogController');
+
+
     Route::resource('orders', '\App\Http\Controllers\OrderController');
+    //user post 
+    Route::get('userpost/{id}', ['App\Http\Controllers\BlogController', 'userpost']);
+
 
 });

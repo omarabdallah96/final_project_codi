@@ -21,7 +21,7 @@ class BlogController extends Controller
 
     public function index()
     {
-        return Blog::where('id', 1)->first();
+        return Blog::join('users','users.id','=','user_id')->get();
     }
 
     public function update(Request $request, $id)
@@ -35,8 +35,10 @@ class BlogController extends Controller
         Blog::where('id', $id)->delete();
     }
 
-    public function rate()
+    public function userpost(Request $request,$id )
     {
+       
+        return Blog::where('user_id',$id)->get();
 
     }
 

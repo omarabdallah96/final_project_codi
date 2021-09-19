@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    backgroundColor: "#c0392b",
+    backgroundColor: "#1976d2",
     color: "white",
     "&:hover": {
       color: "black",

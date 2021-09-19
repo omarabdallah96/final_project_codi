@@ -37,7 +37,13 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $credentials = request(['email', 'password']);
+        $credentials = request(['email', 'password','status']);
+        $checkuser=User::where('email',request(['email']))->first();
+        if($checkuser->status!="active"){
+            return response()->json(['disabled' => 'this user was disabled'], 401);
+
+        } 
+
 
         if (! $token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
