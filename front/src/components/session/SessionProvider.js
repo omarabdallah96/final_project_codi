@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import SessionContext from "./SessionContext";
 import { setCookie, getCookie, removeCookie } from "../../cookies";
 import { toast } from "react-toastify";
-import axios from 'axios';
+import axios from "axios";
+import { Redirect } from "react-router";
+import sessionapi from '../API/sessionapi'
 
 export default function SessionProvider({ children }) {
-  let id = getCookie("id");
   let token = getCookie("token");
-  const [loggedin,setLoggedin]=useState(false)
+  const [loggedin, setLoggedin] = useState(false);
   const [session, setValue] = useState({
     user: {
       token: getCookie("token"),
@@ -15,12 +16,10 @@ export default function SessionProvider({ children }) {
   });
 
   useEffect(() => {
-   
     function initializeSession() {
-      
-    
+      let token = getCookie("token");
       if (token)
-        fetch(`http://127.0.0.1:8000/api/user`, {
+        fetch(`${sessionapi}api/user`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -28,15 +27,13 @@ export default function SessionProvider({ children }) {
           .then((res) => res.json())
           .then((res) => {
             if (!res) {
-                removeCookie("token");
-                removeCookie("id");
+              return <Redirect to="/account" />;
+            }
+            let role=res.role
 
-
-              }
-            let user = { ...res, token };
-            setLoggedin(true)
+            let user = { ...res, token ,role};
+            setLoggedin(true);
             updateSession({ user });
-          
           });
     }
     initializeSession();
@@ -53,11 +50,9 @@ export default function SessionProvider({ children }) {
   async function login({ email, password }) {
     // try to login
     let {
-      error,
-      disabled,
-      id = 4,
+      error,id = 4,
       token,
-    } = await fetch("http://127.0.0.1:8000/api/login", {
+    } = await fetch(`${sessionapi}api/login`, {
       method: "post",
       headers: {
         "Content-type": "application/json",
@@ -66,54 +61,62 @@ export default function SessionProvider({ children }) {
     }).then((res) => res.json());
 
     // return from the function if you have an error
-    if (disabled || !token) return toast.error(disabled);
+    // if (disabled || !token) return toast.error(disabled);
 
     if (error || !token) return toast.error(error);
-
 
     // get the data of the loggedin user
     setCookie("token", token);
     setCookie("id", id);
 
-    let result = await fetch(`http://127.0.0.1:8000/api/user`, {
+    let result = await fetch(`${sessionapi}api/user`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     }).then((res) => res.json());
-    let role=result.role
+    let role = result.role;
+    console.log(result);
+    if (!result) {
+      logout()
+    }
 
-    let user = { ...result, token,role };
+    let user = { ...result, token, role };
 
     updateSession({ user });
     // toast(`Welcome ${user.name}!`);
   }
 
   function logout() {
-    setLoggedin(false)
-    updateSession({ user: { token: null } });
+    setLoggedin(false);
     removeCookie("id");
     removeCookie("token");
+    updateSession({ user: { token: null } });
 
   }
- async function register(email, username, password) {
-    let req ={
-      username:username,
-      email:email,
+  async function register(email, username, password) {
+    let req = {
+      username: username,
+      email: email,
+      password: password,
+      role: "user",
+      name: "",
+      lastname: "",
+      status: "active",
+      address: "lebanon",
+      phone: "0",
+      photo: "kgOrcxjkELpYSGkSj2fsvRuAqICRZm1n5FUqyc3S.png",
 
-      password:password,
-      role:"user",
-      name:"",
-      lastname:'',
-      status:"active",
-      photo:"",
-      address:"lebanon",
-      phone:"0"
+    };
+    let body={
+      "username": "12",
+        "email": "omar",
+        "photo": "kgOrcxjkELpYSGkSj2fsvRuAqICRZm1n5FUqyc3S.png",
+        password: password,
 
     }
     console.log(req);
-  let result=  await axios.post("http://127.0.0.1:8000/api/register",req) 
-   
-  
+    let result = await axios.post(`${sessionapi}api/uploadimage`, req);
+
     console.log(result);
 
     // return from the function if you have an error

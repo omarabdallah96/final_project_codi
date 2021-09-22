@@ -22,10 +22,13 @@ class CreatePostsTable extends Migration
             $table->text('from_country');
             $table->text('to_country');
             $table->text('space');
+            $table->date('post_date')->default((date("Y-m-d H:i:s")));
+
+
             $table->date('date_depart');
             $table->date('date_arrive');
             $table->text('note');
-            $table->boolean('published');
+            $table->string('published')->default('published');
 
 
           

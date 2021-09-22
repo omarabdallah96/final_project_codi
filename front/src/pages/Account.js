@@ -9,7 +9,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import React, { useContext, useState } from "react";
 import SessionContext from "../components/session/SessionContext";
-import travel from '../assets/travel.png';
+import travel from "../assets/travel.png";
+import api from "../components/API/API";
+import CountrySelect from "../components/country/countrylist";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,22 +43,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const [account, setaccount] = useState(true);
+  const [selectdcountry,setCountry]=useState("")
   const toggle = () => {
     if (account) {
       setaccount(false);
-      
+
       return;
     } else {
-      
-
       setaccount(true);
-
     }
   };
 
   const classes = useStyles();
   const {
-    actions: { login,register },
+    actions: { login, register },
   } = useContext(SessionContext);
 
   const [state, setValue] = useState({
@@ -65,12 +65,24 @@ export default function SignIn() {
     regpassword: "",
     regemail: "",
     regusername: "",
+    phone: "",
 
-
-
+    photo: "",
+    reglastname: "",
   });
 
-  const { email, password,regemail,regusername,regpassword } = state;
+  const {
+    email,
+    password,
+    regemail,
+    regusername,
+    regpassword,
+    photo,
+    regname,
+    reglastname,
+    regcountry,
+    phone,
+  } = state;
 
   function setState(nextState) {
     setValue((prevState) => ({
@@ -88,10 +100,44 @@ export default function SignIn() {
     e.nativeEvent.preventDefault();
     login(state);
   }
-  async function handleRegister(e) {
-    e.nativeEvent.preventDefault();
-    register(state.regemail,state.regusername,state.regpassword);
-  }
+
+  const handleRegister = async (event) => {
+    event.preventDefault();
+    const fileInput = document.querySelector("#photo");
+    const formData = new FormData();
+    formData.append("name", regname);
+    formData.append("lastname", reglastname);
+    formData.append("username", regusername);
+    formData.append("phone", phone);
+
+    formData.append("email", regemail);
+    formData.append("password", regpassword);
+    formData.append("status", "active");
+
+    formData.append("photo", fileInput.files[0]);
+    formData.append("role", "user");
+
+    formData.append("address", selectdcountry);
+    const body = {
+      name: regname,
+      lastname: reglastname,
+      username: regusername,
+      phone: phone,
+      email: regemail,
+      password: regpassword,
+      status: regpassword,
+      photo: fileInput,
+      role: "user",
+    };
+
+    await api.post("/uploadimage", formData, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    setaccount(true);
+  };
 
   return (
     <div>
@@ -102,11 +148,11 @@ export default function SignIn() {
           <div className={classes.paper}>
             {/* <Avatar className={classes.avatar}>
           </Avatar> */}
-          <img src={travel} alt="" style={{maxHeight:100}} srcset="" />  
+            <img src={travel} alt="" style={{ maxHeight: 100 }} srcset="" />
             <Typography component="h1" variant="h5">
               Log In To Your Account
             </Typography>
-            <form onSubmit={handleLogin} className={classes.form} noValidate>
+            <form onSubmit={handleLogin} className={classes.form}>
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -166,7 +212,31 @@ export default function SignIn() {
             <Typography component="h1" variant="h5">
               Create New Account
             </Typography>
-            <form onSubmit={handleRegister} className={classes.form} noValidate>
+            <form onSubmit={handleRegister} enctype="multipart/form-data" className={classes.form}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="First Name"
+                autoComplete="off"
+                autoFocus
+                name="regname"
+                value={regname}
+                onChange={handleChange}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Last Name"
+                autoComplete="off"
+                autoFocus
+                name="reglastname"
+                value={reglastname}
+                onChange={handleChange}
+              />
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -193,7 +263,20 @@ export default function SignIn() {
                 value={regusername}
                 onChange={handleChange}
               />
-               <TextField
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Phone"
+                type="text"
+                id="phone"
+                autoComplete="off"
+                name="phone"
+                value={phone}
+                onChange={handleChange}
+              />
+              <TextField
                 variant="outlined"
                 margin="normal"
                 required
@@ -206,12 +289,30 @@ export default function SignIn() {
                 value={regpassword}
                 onChange={handleChange}
               />
-            
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                type="file"
+                id="photo"
+                autoComplete="off"
+                name="photo"
+                value={photo}
+                onChange={handleChange}
+              />
+              <CountrySelect
+                label="Country"
+                selectedcountry={(e)=>setCountry(e.target.value)}
+                name="address"
+              
+              
+             />
+
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-
                 className={classes.submit}
               >
                 register
@@ -221,6 +322,7 @@ export default function SignIn() {
                   <Button
                     type="submit"
                     fullWidth
+                    id="backlogin"
                     variant="contained"
                     className={classes.submit}
                     onClick={toggle}

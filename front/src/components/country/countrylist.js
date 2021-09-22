@@ -3,11 +3,14 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-export default function CountrySelect() {
+export default function CountrySelect(props) {
   return (
     <Autocomplete
+    defaultValue={props.default}
+
       id="country-select-demo"
-      sx={{ maxWidth: 300 }}
+      // sx={{ maxWidth: 300 }}
+      maxWidth
       options={countries}
       autoHighlight
       getOptionLabel={(option) => option.label}
@@ -25,8 +28,11 @@ export default function CountrySelect() {
       )}
       renderInput={(params) => (
         <TextField
+        name={props.name}
+
           {...params}
-          label="Choose a country"
+          onSelect={props.selectedcountry}
+          label={props.label}
           inputProps={{
             ...params.inputProps,
             autoComplete: 'off', // disable autocomplete and autofill

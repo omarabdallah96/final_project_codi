@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,15 +14,40 @@ class BlogController extends Controller
      * @param Request $request
      */
     public function store(Request $request){
+        try{
+            $blog = new Blog();
+            $blog->fill($request->all());
+            $blog->save();
+            return  response()->json([
+                "success"=>true,
+                "blog"=>$blog
+            ]);
 
-        $blog = new Blog();
-        $blog->fill($request->all());
-        $blog->save();
+        }
+        catch(Exception $e){
+            return  response()->json([
+                "success"=>$e,
+            ]);
+
+        }
+
+  
     }
 
-    public function index()
+    public function index($id)
     {
-        return Blog::join('users','users.id','=','user_id')->get();
+        return Blog::join('users','users.id','=','user_id')
+        
+        
+        ->where('published',"published")
+        
+        ->whereNotIn('user_id', [$id])
+        
+        
+        ->get(['posts.id AS post_id',"users.*","posts.*"])
+        
+        ;
+
     }
 
     public function update(Request $request, $id)

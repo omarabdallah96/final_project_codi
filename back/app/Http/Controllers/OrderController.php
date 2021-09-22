@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use Exception;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -36,10 +37,26 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $blog = new Order();
-        $blog->fill($request->all());
-        $blog->save();
+        
+        try{
+
+            $order = new Order();
+            $order->fill($request->all());
+            $order->save();
+         return  response()->json([
+            "success"=>true,
+            "order"=>$order
+        ]);
+           
+        //    return response()->json(['success' => 'new order sent to '], 200 );
+
+        }
+        catch(Exception $e){
+            return response()->json(['error' => 'order not sended'], 401);
+
+        }
+      
+       
         
     }
 
@@ -49,9 +66,9 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $order)
+    public function myorder(Order $order ,$id)
     {
-        //
+        return  Order::join('users','users.id','=','user_re_id')->where('orders.user_re_id',$id)->get();
     }
 
     /**
@@ -83,8 +100,24 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
+    public function deleteOrder(Order $order ,$id)
     {
-        //
+         $deleteorder= Order::find($id);
+
+         
+         
+        if ($deleteorder){
+
+            $deleteorder->delete();
+            return response()->json(['succes' => 'Order  Deleted'], 200);
+
+        }
+        return response()->json(['error' => 'Order not Delete'], 401);
+
+
     }
+
+ 
+   
+
 }

@@ -12,9 +12,8 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable =[
-        'id', 'id_re_user','post_id','status','date_order','description',
+        'id', 'user_re_id','post_id','order_status','date_order','description',"space",
     ];
-
     protected $primaryKey = 'id';
 
 }

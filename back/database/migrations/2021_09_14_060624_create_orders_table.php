@@ -22,7 +22,9 @@ class CreateOrdersTable extends Migration
             $table->foreignId('post_id')->
             constrained('posts')->
             onDelete('restrict');
-            $table->boolean('status');
+            $table->string('order_status');
+            $table->string('space');
+
             $table->date('date_order');
             $table->text('description');
             $table->timestamps();

@@ -10,7 +10,7 @@ class Blog extends Model
     use HasFactory;
 
     protected $fillable =[
-        'title', 'id_user','from_country','to_country','space','date_depart','date_arrive'
+        'title', 'user_id','from_country','to_country','space','date_depart','date_arrive','note',
     ];
 
     protected $primaryKey = 'id';
