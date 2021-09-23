@@ -68,7 +68,7 @@ class OrderController extends Controller
      */
     public function myorder(Order $order ,$id)
     {
-        return  Order::join('users','users.id','=','user_re_id')->where('orders.user_re_id',$id)->get();
+        return  Order::join('users','users.id','=','user_re_id')->where('orders.user_re_id',$id)->get(['orders.id AS order_id','orders.*','users.*']);
     }
 
     /**

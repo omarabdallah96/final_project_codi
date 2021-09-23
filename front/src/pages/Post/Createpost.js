@@ -15,6 +15,9 @@ import api from "../../components/API/API";
 import SessionContext from "../../components/session/SessionContext";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
+import NoteAltSharpIcon from '@mui/icons-material/NoteAltSharp';
+import FlightTakeoffSharpIcon from '@mui/icons-material/FlightTakeoffSharp';
+import Loading from "../../components/Loading/Loading";
 
 
 
@@ -89,11 +92,12 @@ export default function Create_Post(props) {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
+            <NoteAltSharpIcon fontSize="large" style={{marginTop:10}} color="primary" />
           <Typography component="h1" variant="h5">
+          <Loading  plane="50"/>
+
             Create New Post
+
           </Typography>
           <Box
             component="form"
@@ -180,8 +184,9 @@ export default function Create_Post(props) {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-            >
-              Create Post
+            >              
+
+              Create Post 
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item></Grid>

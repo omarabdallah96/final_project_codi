@@ -139,7 +139,7 @@ export default function BasicTabs() {
                   </tr>
                   <br />
                   <tr>
-                    <Button onClick={deleteOrder(myorder.id)} variant="contained" color="Secondary">
+                    <Button onClick={(id)=> deleteOrder(myorder.order_id)} variant="contained" color="Secondary">
                       Cancel
                     </Button>
                     &nbsp;

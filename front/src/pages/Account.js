@@ -12,6 +12,10 @@ import SessionContext from "../components/session/SessionContext";
 import travel from "../assets/travel.png";
 import api from "../components/API/API";
 import CountrySelect from "../components/country/countrylist";
+import { Box } from "@mui/system";
+import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
+import { toast } from "react-toastify";
+import Loading from "../components/Loading/Loading";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -43,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const [account, setaccount] = useState(true);
-  const [selectdcountry,setCountry]=useState("")
+  const [selectdcountry, setCountry] = useState("");
   const toggle = () => {
     if (account) {
       setaccount(false);
@@ -129,14 +133,23 @@ export default function SignIn() {
       photo: fileInput,
       role: "user",
     };
+    try {
+      await api.post("/uploadimage", formData, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setaccount(true);
+      toast.success("saved")
+      
+    } catch (error) {
+      toast.error("Please Your Inputs")
 
-    await api.post("/uploadimage", formData, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    setaccount(true);
+      
+    }
+
+  
   };
 
   return (
@@ -207,17 +220,22 @@ export default function SignIn() {
           <CssBaseline />
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>
-              {/* <LockOutlinedIcon /> */}
             </Avatar>
+            
             <Typography component="h1" variant="h5">
               Create New Account
             </Typography>
-            <form onSubmit={handleRegister} enctype="multipart/form-data" className={classes.form}>
+            <form
+              onSubmit={handleRegister}
+              enctype="multipart/form-data"
+              className={classes.form}
+            >
+              <Box style={{display:"flex"}}>
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
-                fullWidth
+                
                 label="First Name"
                 autoComplete="off"
                 autoFocus
@@ -225,18 +243,21 @@ export default function SignIn() {
                 value={regname}
                 onChange={handleChange}
               />
+              &nbsp;
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
-                fullWidth
                 label="Last Name"
                 autoComplete="off"
-                autoFocus
+                
                 name="reglastname"
                 value={reglastname}
                 onChange={handleChange}
               />
+
+              </Box>
+             
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -245,16 +266,16 @@ export default function SignIn() {
                 id="email"
                 label="Email Address"
                 autoComplete="off"
-                autoFocus
+                
                 name="regemail"
                 value={regemail}
                 onChange={handleChange}
               />
+              <Box style={{display:"flex" ,alignItems:"center"}}>
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
-                fullWidth
                 label="Username"
                 type="text"
                 id="regusername"
@@ -263,6 +284,26 @@ export default function SignIn() {
                 value={regusername}
                 onChange={handleChange}
               />
+              &nbsp;
+
+                <label
+                for="photo"
+                style={{
+                  border: "1px solid #ccc",
+                  display: "inline-block",
+                  padding: "6px 12px",
+                  cursor: "pointer",
+                  height:"55px",
+                  marginTop:"15px",
+                  width:"50%"
+                }}
+                class="custom-file-upload"
+              >
+                <AddPhotoAlternateOutlinedIcon  fontSize="large" />
+
+              </label>
+              </Box>
+              
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -289,11 +330,13 @@ export default function SignIn() {
                 value={regpassword}
                 onChange={handleChange}
               />
+            
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
+                hidden
                 type="file"
                 id="photo"
                 autoComplete="off"
@@ -303,11 +346,9 @@ export default function SignIn() {
               />
               <CountrySelect
                 label="Country"
-                selectedcountry={(e)=>setCountry(e.target.value)}
+                selectedcountry={(e) => setCountry(e.target.value)}
                 name="address"
-              
-              
-             />
+              />
 
               <Button
                 type="submit"

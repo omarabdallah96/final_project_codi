@@ -13,9 +13,8 @@ import { useContext } from "react";
 import { TextField } from "@mui/material";
 import api from "../../components/API/API";
 import { Button } from "@material-ui/core";
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
 
 import "./Home.css";
 import { toast } from "react-toastify";
@@ -60,6 +59,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function RecipeReviewCard() {
   const [postdata, setData] = useState([]);
+  const [myorder, setorder] = useState([]);
+
   const [weight, setwheight] = useState(1);
   const [description, setdescription] = useState("");
 
@@ -83,6 +84,19 @@ export default function RecipeReviewCard() {
       toast.error("order not sended");
     }
   }
+  
+  const filterByReference = (arr1, arr2) => {
+       let res = [];
+       res = arr1.filter(el => {
+          return arr2.find(element => {
+             return element.post_id === el.post_id;
+          });
+       });
+    setData(res)
+
+       return res;
+
+    }
 
   const {
     session: { user },
@@ -94,10 +108,17 @@ export default function RecipeReviewCard() {
   useEffect(() => {
     const getPost = async () => {
       const { data } = await api.get(`/filterpost/${id}`);
-      console.log(data);
       setData(data);
     };
+    const getorder = async () => {
+      const { data } = await api.get(`/myorder/${id}`);
+      setorder(data)
+     
+    };
+    getorder();
     getPost();
+    filterByReference(postdata, myorder)
+    console.log(postdata, myorder)
   }, [id]);
   if (postdata.length > 0)
     return (
@@ -109,14 +130,18 @@ export default function RecipeReviewCard() {
         <div className="parent-container">
           {postdata.map((post) => {
             return (
-              <Card elevation={5} className={classes.parent} sx={{ maxWidth: 345 }}>
+              <Card
+                elevation={5}
+                className={classes.parent}
+                sx={{ maxWidth: 345 }}
+              >
                 <CardHeader
                   avatar={
                     <>
                       <Avatar
                         src={Storage + post.photo}
                         sx={{ bgcolor: red[500] }}
-                        alt={Storage+`avatar.png`}
+                        alt={Storage + `avatar.png`}
                         aria-label="recipe"
                       ></Avatar>
                       {post.name} {post.lastname}
@@ -218,13 +243,10 @@ export default function RecipeReviewCard() {
                     </td>
                   </Typography>
                 </CardContent>
-                
               </Card>
             );
           })}
         </div>
-      
-
       </center>
     );
   else {
