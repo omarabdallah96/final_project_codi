@@ -92,7 +92,7 @@ export default function Create_Post(props) {
             alignItems: "center",
           }}
         >
-            <NoteAltSharpIcon fontSize="large" style={{marginTop:10}} color="primary" />
+            <NoteAltSharpIcon fontSize="large" style={{marginTop:9}} color="primary" />
           <Typography component="h1" variant="h5">
           <Loading  plane="50"/>
 
