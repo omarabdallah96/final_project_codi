@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\Order;
+
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,10 +38,14 @@ class BlogController extends Controller
 
     public function index($id)
     {
+        $myorder=  Order::join('users','users.id','=','user_re_id')->where('orders.user_re_id',$id)->get(['orders.post_id']);
+
         return Blog::join('users','users.id','=','user_id')
         
         
-        ->where('published',"published")
+        ->where('published',"published")->
+        whereNotIn('posts.id',$myorder)
+
         
         ->whereNotIn('user_id', [$id])
         

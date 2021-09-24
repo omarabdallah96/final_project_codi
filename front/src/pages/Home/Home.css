@@ -1,16 +1,25 @@
-.parent-container{
-    display: grid;
-    grid-template-columns: 25% 25% 25% 25%;   
+.parent-container {
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+  animation: fadein 2s;
 }
 @media only screen and (max-width: 900px) {
-    .parent-container{
-        display: grid;
-        grid-template-columns: auto auto auto ;   
-    }
+  .parent-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
   }
+}
 @media only screen and (max-width: 600px) {
-    .parent-container{
-        display: grid;
-        grid-template-columns: auto  ;   
-    }
+  .parent-container {
+    display: grid;
+    grid-template-columns: auto;
   }
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

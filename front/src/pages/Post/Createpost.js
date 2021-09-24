@@ -94,9 +94,9 @@ export default function Create_Post(props) {
         >
             <NoteAltSharpIcon fontSize="large" style={{marginTop:9}} color="primary" />
           <Typography component="h1" variant="h5">
-          <Loading  plane="50"/>
 
             Create New Post
+            <Loading  plane="50"/>
 
           </Typography>
           <Box

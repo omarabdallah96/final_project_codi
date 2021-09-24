@@ -18,6 +18,7 @@ import { Button } from "@material-ui/core";
 import Storage from "../../components/API/Storage";
 import { Paper } from "@mui/material";
 import { toast } from "react-toastify";
+import { style } from "@mui/system";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,27 +61,15 @@ export default function BasicTabs() {
     session: { user },
     actions: { logout },
   } = useContext(SessionContext);
-  const deleteOrder= async(orderid)=>{
-    
-
-      try {
-        await  api.delete(`deleteOrder/${orderid}`)
-
-
-        
-      } catch (error) {
-
-        return toast.error("error");
-
-        
-      
-
+  const deleteOrder = async (orderid) => {
+    try {
+      await api.delete(`deleteOrder/${orderid}`);
+    } catch (error) {
+      return toast.error("error");
     }
+  };
 
-
-  }
-
-  const { id, email, name, lastname, address, photo, phone } = user;
+  const { id, email, name, lastname, address, username, photo, phone } = user;
   const [mypost, setmypost] = useState([]);
   const [order, setmyorder] = useState([]);
 
@@ -89,26 +78,51 @@ export default function BasicTabs() {
   };
   const About = () => {
     return (
-      <div>
-        <TextField
-          id="outlined-basic"
-          value={email}
-          label="email"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-basic"
-          value={phone}
-          label="phone"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-basic"
-          value={address}
-          label="address"
-          variant="outlined"
-        />
-      </div>
+      <center>
+        <Paper
+          elevation={3}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "50%",
+            paddingRight: 20,
+            paddingLeft: 20,
+          }}
+        >
+          <br />
+          <TextField
+            id="outlined-basic"
+            value={email}
+            label="email"
+            variant="outlined"
+          />
+          <TextField
+            id="outlined-basic"
+            value={username}
+            label="@username"
+            variant="outlined"
+          />
+          <br />
+          <TextField
+            id="outlined-basic"
+            value={phone}
+            label="phone"
+            variant="outlined"
+          />
+          <br />
+          <TextField
+            id="outlined-basic"
+            value={address}
+            label="address"
+            variant="outlined"
+          />
+          <br />
+          <Button variant="contained" color="primary">
+            update profile
+          </Button>
+          <br />
+        </Paper>
+      </center>
     );
   };
   const Myorder = () => {
@@ -120,35 +134,45 @@ export default function BasicTabs() {
         {order ? (
           <div className="parent-container">
             {order.map((myorder) => (
-              <Paper style={{ marginLeft: 10 }} square={true} elevation={3}>
-                <center>
-                  <tr>
-                 {myorder.id} 
-                  </tr>
-                  <tr>
-                    <TextField label="Order Status" value={myorder.order_status} />
-                  </tr>
-                  <tr>
-                    <TextField maxWidth label="Order Date" type="date" value={myorder.date_order} />
-                  </tr>
-                  <tr>
-                    <TextField   label="" value={myorder.space} />
-                  </tr>
-                  <tr>
-                    <TextField  value={myorder.description} />
-                  </tr>
-                  <br />
-                  <tr>
-                    <Button onClick={(id)=> deleteOrder(myorder.order_id)} variant="contained" color="Secondary">
-                      Cancel
-                    </Button>
-                    &nbsp;
-                    <Button variant="contained" color="primary">
-                      Edit
-                    </Button>
-                  </tr>
-                  <br />
-                </center>
+              <Paper
+                style={{
+                  marginLeft: 10,
+                  display: "flex",
+                  flexDirection: "column",
+                  textAlign: "center",
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                }}
+                square={true}
+                elevation={3}
+              >
+                <span> {myorder.post_id}</span>
+                <TextField
+                  align="center"
+                  label="Order Status"
+                  value={myorder.order_status}
+                />
+                <TextField
+                  fullWidth
+                  label="Order Date"
+                  type="date"
+                  value={myorder.date_order}
+                />
+                <TextField label="" value={myorder.space} />
+                <TextField value={myorder.description} />
+                <br />
+                <Button
+                  onClick={(id) => deleteOrder(myorder.order_id)}
+                  variant="contained"
+                  color="Secondary"
+                >
+                  Cancel
+                </Button>
+                &nbsp;
+                <Button variant="contained" color="primary">
+                  Edit
+                </Button>
+                <br />
               </Paper>
             ))}
           </div>
@@ -299,7 +323,6 @@ export default function BasicTabs() {
         <About />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        
         <Myorder />
       </TabPanel>
     </Box>

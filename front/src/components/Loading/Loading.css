@@ -1,31 +1,13 @@
-#pot {
-    
-    position: absolute;
-    animation: linear infinite ;
-    animation-name: run;
-    animation-duration: 10s;
-    transform: rotate(90deg);
-    color:red;
-    top: 0;
-    z-index: 777;
 
-}
-  @keyframes run {
-    0% {
-      left: 0;
-      opacity: 0;
 
+    #pot {
       
+      position: relative;
+      animation: mymove 20s infinite;
+      transform: rotate(90deg);
     }
-    50% { 
-      left: calc(100% - 100px); 
-      opacity: 0.5;
-
-
-     }
-    100% {
-        
-      left: 0; 
-      opacity: 0;
+    
+    @keyframes mymove {
+      from {left: 0px;}
+      to {left:300px ;}
     }
-  }

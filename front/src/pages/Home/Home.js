@@ -85,18 +85,7 @@ export default function RecipeReviewCard() {
     }
   }
   
-  const filterByReference = (arr1, arr2) => {
-       let res = [];
-       res = arr1.filter(el => {
-          return arr2.find(element => {
-             return element.post_id === el.post_id;
-          });
-       });
-    setData(res)
-
-       return res;
-
-    }
+  
 
   const {
     session: { user },
@@ -117,8 +106,6 @@ export default function RecipeReviewCard() {
     };
     getorder();
     getPost();
-    filterByReference(postdata, myorder)
-    console.log(postdata, myorder)
   }, [id]);
   if (postdata.length > 0)
     return (
@@ -134,6 +121,7 @@ export default function RecipeReviewCard() {
                 elevation={5}
                 className={classes.parent}
                 sx={{ maxWidth: 345 }}
+                style={{marginRight:20,maxHeight:400}}
               >
                 <CardHeader
                   avatar={
@@ -180,25 +168,7 @@ export default function RecipeReviewCard() {
                       &nbsp; &nbsp; &nbsp;
                       <td>{post.date_depart}</td>
                     </tr>
-                    <tr style={{ display: "grid" }}>
-                      <td>
-                        <span></span>
-                      </td>
-
-                      <td>
-                        <span>
-                          <LocalMallIcon color="error" />
-                        </span>
-                      </td>
-                      <td>
-                        <span>{post.space} KG</span>
-                      </td>
-                      <td>
-                        <span>{post.note} </span>
-                      </td>
-                      <td></td>
-                    </tr>
-                    <br />
+                   
 
                     <td style={{ display: "grid" }}>
                       <TextField
