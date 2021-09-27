@@ -17,8 +17,8 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->
             constrained('users')->
-            onDelete('restrict');
-            $table->string('title');  
+            onDelete('cascade');
+            $table->string('cost');  
             $table->text('from_country');
             $table->text('to_country');
             $table->text('space');

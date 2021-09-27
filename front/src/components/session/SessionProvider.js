@@ -59,6 +59,7 @@ export default function SessionProvider({ children }) {
       },
       body: JSON.stringify({ email, password }),
     }).then((res) => res.json());
+    
 
     // return from the function if you have an error
     // if (disabled || !token) return toast.error(disabled);

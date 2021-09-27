@@ -6,8 +6,22 @@ import Account from "../pages/Account";
 import Home from "../pages//Home/Home";
 import Profile from "../pages/Profile/Profile";
 import CreatePost from "../pages/Post/Createpost";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 
 export default function Routes() {
+  const theme = createTheme({
+    palette: {
+      primary: {
+        // Purple and green play nicely together.
+        main: "#00000",
+      },
+      secondary: {
+        // This is green.A700 as hex.
+        main: '#11cb5f',
+      },
+    },
+  });
   const {
     session: {
       user: { token, role },
@@ -15,6 +29,8 @@ export default function Routes() {
   } = useContext(SessionContext);
 
   return (
+    <ThemeProvider theme={theme}>
+
     <Switch>
       <PublicRoute exact path="/account" component={Account} token={token} />
       <PrivateRoute role={role} exact path="/" component={Home} token={token} />
@@ -39,6 +55,8 @@ export default function Routes() {
 
 
     </Switch>
+    </ThemeProvider>
+
   );
 }
 function PublicRoute({ path, component: Component, token, ...props }) {

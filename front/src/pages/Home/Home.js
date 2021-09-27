@@ -15,7 +15,10 @@ import api from "../../components/API/API";
 import { Button } from "@material-ui/core";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
+import { countries } from "country-data";
+import theme from "../../components/Style/Style";
 
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import "./Home.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,7 +27,11 @@ import FlightLandIcon from "@mui/icons-material/FlightLand";
 import SendIcon from "@mui/icons-material/Send";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import Storage from "../../components/API/Storage";
+import FlightIcon from "@mui/icons-material/Flight";
 import moment from "moment";
+import Loading2 from "../../components/Loading/Loading2";
+import { Link } from "react-router-dom";
+import OrderCard from "../../components/OrderCard/OrderCard";
 const useStyles = makeStyles((theme) => ({
   parent: {
     marginTop: 20,
@@ -57,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function RecipeReviewCard() {
+export default function RecipeReviewCard(props) {
   const [postdata, setData] = useState([]);
   const [myorder, setorder] = useState([]);
 
@@ -70,7 +77,7 @@ export default function RecipeReviewCard() {
     const body = {
       user_re_id: id,
       post_id: postid,
-      status: 1,
+      order_status: "pending",
       date_order: today,
 
       space: weight,
@@ -84,8 +91,6 @@ export default function RecipeReviewCard() {
       toast.error("order not sended");
     }
   }
-  
-  
 
   const {
     session: { user },
@@ -101,8 +106,7 @@ export default function RecipeReviewCard() {
     };
     const getorder = async () => {
       const { data } = await api.get(`/myorder/${id}`);
-      setorder(data)
-     
+      setorder(data);
     };
     getorder();
     getPost();
@@ -117,103 +121,17 @@ export default function RecipeReviewCard() {
         <div className="parent-container">
           {postdata.map((post) => {
             return (
-              <Card
-                elevation={5}
-                className={classes.parent}
-                sx={{ maxWidth: 345 }}
-                style={{marginRight:20,maxHeight:400}}
-              >
-                <CardHeader
-                  avatar={
-                    <>
-                      <Avatar
-                        src={Storage + post.photo}
-                        sx={{ bgcolor: red[500] }}
-                        alt={Storage + `avatar.png`}
-                        aria-label="recipe"
-                      ></Avatar>
-                      {post.name} {post.lastname}
-                    </>
-                  }
-                  action={
-                    <IconButton aria-label="settings">
-                      <MoreVertIcon />
-                    </IconButton>
-                  }
-                  title={post.title}
-                  subheader={post.date_depart}
-                />
-
-                <CardContent>
-                  <Typography variant="body2" color="text.secondary">
-                    <tr
-                      style={{
-                        textAlign: "center",
-                        fontSize: "15px",
-                        fontFamily: "system-ui",
-                      }}
-                    >
-                      <td>{post.from_country} </td>
-                      &nbsp; &nbsp;
-                      <span>
-                        <FlightTakeoffIcon /> &nbsp; &nbsp; &nbsp;
-                        <FlightLandIcon />
-                      </span>
-                      &nbsp; &nbsp;
-                      <td> {post.to_country}</td>
-                    </tr>
-                    <br />
-                    <tr style={{ color: "red" }}>
-                      <td>{post.date_depart} </td>
-                      &nbsp; &nbsp; &nbsp;
-                      <td>{post.date_depart}</td>
-                    </tr>
-                   
-
-                    <td style={{ display: "grid" }}>
-                      <TextField
-                        size="small"
-                        id="outlined-number"
-                        label="Order Weight"
-                        type="number"
-                        defaultValue="1"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        onChange={(e) => setwheight(e.target.value)}
-                        onInput={(e) => {
-                          e.target.value = Math.max(0, parseInt(e.target.value))
-                            .toString()
-                            .slice(0, 1);
-                        }}
-                      />
-                      <br />
-                      <TextField
-                        size="small"
-                        id="outlined-number"
-                        label="Order Description"
-                        type="text"
-                        defaultValue={description}
-                        multiline
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        onChange={(e) => setdescription(e.target.value)}
-                      />
-
-                      <br />
-                      <Button
-                        onClick={(id) => neworder(post.post_id)}
-                        variant="contained"
-                        color="primary"
-                        startIcon={<SendIcon />}
-                      >
-                        order
-                      </Button>
-                    </td>
-                  </Typography>
-                </CardContent>
-              </Card>
+              <OrderCard
+                v={post.id}
+                fullname={post.name + " " + post.lastname}
+                change={(e) => console.log(e.target.value)}
+                post_date={post.post_date}
+                avatar={Storage + post.photo}
+                from_country={countries[post.from_country].name}
+                to_country={countries[post.to_country].name}
+                from_country_code={post.from_country}
+                to_country_code={post.to_country}
+              />
             );
           })}
         </div>
@@ -221,14 +139,16 @@ export default function RecipeReviewCard() {
     );
   else {
     return (
-      <div>
+      <>
         <br />
         <br />
         <br />
         <br />
         <br />
-        <br /> <div>Loading</div>
-      </div>
+        <br />
+        <br />
+        <Loading2 />
+      </>
     );
   }
 }

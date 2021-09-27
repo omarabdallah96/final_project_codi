@@ -116,7 +116,18 @@ class OrderController extends Controller
 
 
     }
+    public function postorder(Order $order ,$id)
+    {
+         
+         return  Order::
+         join('posts','posts.id','=','post_id')
+         ->join('users','users.id','=','orders.user_re_id')
 
+         ->where('posts.user_id',$id)->get()
+         ;
+
+
+    }
  
    
 

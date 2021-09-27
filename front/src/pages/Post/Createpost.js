@@ -60,7 +60,7 @@ export default function Create_Post(props) {
     const body = {
       user_id: id,
       space: state.space,
-      title: "travle",
+      "cost": "12",
       from_country: state.from_country,
       to_country: state.to_country,
       date_depart: state.date_depart,

@@ -1,13 +1,13 @@
 
-
-    #pot {
+#pot {
       
       position: relative;
-      animation: mymove 20s infinite;
+      animation: example 6s  infinite;
       transform: rotate(90deg);
     }
     
-    @keyframes mymove {
-      from {left: 0px;}
-      to {left:300px ;}
+    @keyframes example {
+      0%   {left:-50px; top:0px;}
+      25%  { left:100px; top:0px;}
+      
     }

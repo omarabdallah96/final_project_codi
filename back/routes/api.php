@@ -27,8 +27,7 @@ Route::post('/login', ['App\Http\Controllers\AuthController', 'login']);
 //Route::put('/blogs/{id}', [\App\Http\Controllers\BlogController::class, 'update']);
 //Route::delete('/blogs/{id}', [\App\Http\Controllers\BlogController::class, 'destroy']);
 Route::post('uploadimage', ['App\Http\Controllers\AuthController', 'uploadimage']);
-Route::delete('deleteimage/{oldImage}', ['App\Http\Controllers\AuthController', 'imageDelete']);
-Route::get('filterpost/{id}', ['App\Http\Controllers\BlogController', 'index']);
+
 
 
 Route::delete('deleteOrder/{id}', ['App\Http\Controllers\OrderController', 'deleteOrder']);
@@ -46,8 +45,11 @@ Route::group(['middleware' => ['jwt.user']], function() {
     Route::get('myorder/{id}', ['App\Http\Controllers\OrderController', 'myorder']);
 
     
+    Route::get('postorder/{id}', ['App\Http\Controllers\OrderController', 'postorder']);
 
-
+    Route::delete('deleteimage/{oldImage}', ['App\Http\Controllers\AuthController', 'imageDelete']);
+    Route::get('filterpost/{id}', ['App\Http\Controllers\BlogController', 'index']);
+    
 
 
 

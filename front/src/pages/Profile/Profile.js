@@ -19,6 +19,7 @@ import Storage from "../../components/API/Storage";
 import { Paper } from "@mui/material";
 import { toast } from "react-toastify";
 import { style } from "@mui/system";
+import {countries} from 'country-data';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -78,13 +79,12 @@ export default function BasicTabs() {
   };
   const About = () => {
     return (
-      <center>
+      <center className="parent-container">
         <Paper
           elevation={3}
           style={{
             display: "flex",
             flexDirection: "column",
-            width: "50%",
             paddingRight: 20,
             paddingLeft: 20,
           }}
@@ -96,6 +96,7 @@ export default function BasicTabs() {
             label="email"
             variant="outlined"
           />
+          <br />
           <TextField
             id="outlined-basic"
             value={username}
@@ -146,7 +147,7 @@ export default function BasicTabs() {
                 square={true}
                 elevation={3}
               >
-                <span> {myorder.post_id}</span>
+                <span># {myorder.post_id}</span>
                 <TextField
                   align="center"
                   label="Order Status"
@@ -161,6 +162,11 @@ export default function BasicTabs() {
                 <TextField label="" value={myorder.space} />
                 <TextField value={myorder.description} />
                 <br />
+                <Button variant="contained" color="primary">
+                  Update Order
+                </Button>
+                &nbsp;
+
                 <Button
                   onClick={(id) => deleteOrder(myorder.order_id)}
                   variant="contained"
@@ -168,10 +174,7 @@ export default function BasicTabs() {
                 >
                   Cancel
                 </Button>
-                &nbsp;
-                <Button variant="contained" color="primary">
-                  Edit
-                </Button>
+                
                 <br />
               </Paper>
             ))}
@@ -223,7 +226,7 @@ export default function BasicTabs() {
                       <MoreVertIcon />
                     </IconButton>
                   }
-                  title={post.name}
+                  title={post.date_depart}
                   subheader={post.date_depart}
                 />
 
@@ -231,6 +234,16 @@ export default function BasicTabs() {
                   <Typography variant="body2" color="text.secondary">
                     <td> {post.date_arrive}</td>
                     <br />
+                    {countries[post.to_country].name}
+                        <br />
+
+                        <img
+                          loading="lazy"
+                          width="40"
+                          src={`https://flagcdn.com/w40/${post.to_country.toLowerCase()}.png`}
+                          srcSet={`https://flagcdn.com/w40/${post.to_country.toLowerCase()}.png 2x`}
+                          alt=""
+                        />
                     <td>{post.to_country} </td>&nbsp;
                     <td>{post.from_country} </td>
                     <br />
@@ -270,15 +283,11 @@ export default function BasicTabs() {
           class="profile-img"
         >
           {photo ? (
-            <img
-              style={{
-                maxWidth: 100,
-                maxHeight: 100,
-                borderRadius: "50%",
-                borderBlockColor: "red",
-              }}
-              src={Storage + photo}
-            />
+           <Avatar
+           alt={Storage + "avatar.png"}
+           src={Storage + photo}
+           aria-label="recipe"
+         ></Avatar>
           ) : (
             <img
               style={{
@@ -292,7 +301,7 @@ export default function BasicTabs() {
           )}
 
           <br />
-          <Button onClick={logout} variant="contained" color="primary">
+          <Button onClick={logout} variant="contained" color="Secondary">
             logout
           </Button>
           <div class="col-md-2">
@@ -311,9 +320,9 @@ export default function BasicTabs() {
           aria-label="basic tabs example"
           centered
         >
-          <Tab style={{ outlineWidth: 0 }} label="Post" {...a11yProps(0)} />
-          <Tab style={{ outlineWidth: 0 }} label="About" {...a11yProps(1)} />
-          <Tab style={{ outlineWidth: 0 }} label="Request" {...a11yProps(2)} />
+          <Tab style={{ outlineWidth: 0 }} label="Posts" {...a11yProps(0)} />
+          <Tab style={{ outlineWidth: 0 }} label="Info" {...a11yProps(1)} />
+          <Tab style={{ outlineWidth: 0 }} label="Orders" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>

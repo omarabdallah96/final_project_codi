@@ -13,7 +13,7 @@ export default function CountrySelect(props) {
       maxWidth
       options={countries}
       autoHighlight
-      getOptionLabel={(option) => option.label}
+      getOptionLabel={(option) =>  option.code  }
       renderOption={(props, option) => (
         <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
           <img
@@ -23,7 +23,7 @@ export default function CountrySelect(props) {
             srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
             alt=""
           />
-          {option.label} 
+          {option.label}
         </Box>
       )}
       renderInput={(params) => (
