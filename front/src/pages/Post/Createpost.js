@@ -60,7 +60,7 @@ export default function Create_Post(props) {
     const body = {
       user_id: id,
       space: state.space,
-      "cost": "12",
+      cost: state.cost,
       from_country: state.from_country,
       to_country: state.to_country,
       date_depart: state.date_depart,
@@ -103,8 +103,9 @@ export default function Create_Post(props) {
             component="form"
             noValidate
             onSubmit={handleSubmit}
+            
             sx={{ mt: 3 }}
-          >
+          > 
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <CountrySelect
@@ -126,6 +127,8 @@ export default function Create_Post(props) {
                   type="date"
                   label="Date Departure"
                   defaultValue={moment().format("YYYY-MM-DD")}
+                  inputProps={{ min:[moment().format("YYYY-MM-DD")] }}
+
                   fullWidth
                   id="email"
                   name="date_depart"
@@ -139,29 +142,37 @@ export default function Create_Post(props) {
                   fullWidth
                   name="date_arrive"
                   type="date"
+
+
                   defaultValue={moment().add(7, "days").format("YYYY-MM-DD")}
+                  inputProps={{ min:[moment().format("YYYY-MM-DD")] }}
+
                   id="password"
-                  label="Date"
+                  label="Date Arrive"
                   autoComplete="off"
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid  display="flex" item xs={12} sm={6}>
                 <TextField
+                required
+                style={{width:"50%"}}
+
+                fullWidth
+                 label="Space"
+                 name="space"
+                 onChange={handleChange}
+                />
+                &nbsp;                &nbsp;
+                &nbsp;
+                &nbsp;
+
+                <TextField
+                style={{width:"50%"}}
+                required
+                  label="Cost per KG"
+                  name="cost"
                   onChange={handleChange}
-                  required
-                  fullWidth
-                  name="space"
-                  type="number"
-                  defaultValue="1"
-                  id="password"
-                  label="availble space"
-                  autoComplete="off"
-                  onInput={(e) => {
-                    e.target.value = Math.max(0, parseInt(e.target.value))
-                      .toString()
-                      .slice(0, 2);
-                  }}
                 />
               </Grid>
               <Grid item xs={12}>

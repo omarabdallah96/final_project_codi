@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import React, { useContext, useEffect, useState } from "react";
 import SessionContext from "../../components/session/SessionContext";
-import { TextField } from "@material-ui/core";
+import { FormLabel, TextField } from "@material-ui/core";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
@@ -19,7 +19,10 @@ import Storage from "../../components/API/Storage";
 import { Paper } from "@mui/material";
 import { toast } from "react-toastify";
 import { style } from "@mui/system";
-import {countries} from 'country-data';
+import { countries } from "country-data";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditIcon from "@mui/icons-material/Edit";
+import moment from "moment";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -65,6 +68,8 @@ export default function BasicTabs() {
   const deleteOrder = async (orderid) => {
     try {
       await api.delete(`deleteOrder/${orderid}`);
+      let filter = [...order].filter((order) => order.order_id !== orderid);
+      setmyorder(filter);
     } catch (error) {
       return toast.error("error");
     }
@@ -73,13 +78,25 @@ export default function BasicTabs() {
   const { id, email, name, lastname, address, username, photo, phone } = user;
   const [mypost, setmypost] = useState([]);
   const [order, setmyorder] = useState([]);
+  const [received, setReceivd] = useState([]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const deletepost = async (id_deleted) => {
+    try {
+      api.delete(`/blogs/${id_deleted}`);
+
+      let filter = [...mypost].filter((post) => post.id !== id_deleted);
+      setmypost(filter);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
   const About = () => {
     return (
-      <center className="parent-container">
+      <center className="profie-container ">
         <Paper
           elevation={3}
           style={{
@@ -126,9 +143,10 @@ export default function BasicTabs() {
       </center>
     );
   };
+
   const Myorder = () => {
-    if (!order) {
-      return console.log("oo");
+    if (order === undefined || order.length == 0) {
+      return <div>Make Some Order</div>;
     }
     return (
       <div>
@@ -147,6 +165,7 @@ export default function BasicTabs() {
                 square={true}
                 elevation={3}
               >
+                {myorder.order_id}
                 <span># {myorder.post_id}</span>
                 <TextField
                   align="center"
@@ -166,15 +185,13 @@ export default function BasicTabs() {
                   Update Order
                 </Button>
                 &nbsp;
-
                 <Button
                   onClick={(id) => deleteOrder(myorder.order_id)}
                   variant="contained"
-                  color="Secondary"
+                  color="Error"
                 >
                   Cancel
                 </Button>
-                
                 <br />
               </Paper>
             ))}
@@ -187,22 +204,31 @@ export default function BasicTabs() {
   };
 
   useEffect(() => {
+    //get my post
     const getpost = async () => {
       const { data } = await api.get(`/userpost/${id}`);
       setmypost(data);
     };
-    const getorder = async () => {
+    //get my sent orders
+    const getsentorder = async () => {
       const { data } = await api.get(`/myorder/${id}`);
       setmyorder(data);
+      console.log(data);
+
+    };
+    //get my sent orders
+    const getreceivdorder = async () => {
+      const { data } = await api.get(`/postorder/${id}`);
+      setReceivd(data);
     };
     getpost();
-    getorder();
-    console.log(altimage);
+    getsentorder();
+    getreceivdorder();
   }, [id]);
 
   const Post = () => {
-    if (!mypost) {
-      return console.log("oo");
+    if (mypost === undefined || mypost.length == 0) {
+      return <div>No Post</div>;
     }
     return (
       <div>
@@ -210,6 +236,8 @@ export default function BasicTabs() {
           <div className="parent-container">
             {mypost.map((post) => (
               <Card
+                elevation={5}
+                key={post.id}
                 style={{ marginBottom: 10, marginLeft: 10 }}
                 sx={{ maxWidth: 345 }}
               >
@@ -223,36 +251,74 @@ export default function BasicTabs() {
                   }
                   action={
                     <IconButton aria-label="settings">
-                      <MoreVertIcon />
+                      <DeleteOutlineIcon
+                        onClick={() => deletepost(post.id)}
+                        color="secondary"
+                      />
                     </IconButton>
                   }
                   title={post.date_depart}
-                  subheader={post.date_depart}
                 />
 
                 <CardContent>
                   <Typography variant="body2" color="text.secondary">
-                    <td> {post.date_arrive}</td>
-                    <br />
-                    {countries[post.to_country].name}
+                    <center>
+                      <td>
+                        {countries[post.to_country].name}
                         <br />
 
                         <img
                           loading="lazy"
-                          width="40"
+                          width="30"
+                          height="20"
                           src={`https://flagcdn.com/w40/${post.to_country.toLowerCase()}.png`}
                           srcSet={`https://flagcdn.com/w40/${post.to_country.toLowerCase()}.png 2x`}
                           alt=""
                         />
-                    <td>{post.to_country} </td>&nbsp;
-                    <td>{post.from_country} </td>
-                    <br />
-                    <td>{post.space}</td>
-                    {post.note}
+                      </td>
+                      <td>
+                        {countries[post.from_country].name}
+                        <br />
+
+                        <img
+                          loading="lazy"
+                          width="30"
+                          height="20"
+                          src={`https://flagcdn.com/w40/${post.from_country.toLowerCase()}.png`}
+                          srcSet={`https://flagcdn.com/w40/${post.from_country.toLowerCase()}.png 2x`}
+                          alt=""
+                        />
+                      </td>
+                      <br />
+                      <TextField
+                        label="space"
+                        variant="outlined"
+                        defaultValue={post.space}
+                        size="small"
+                        onChange={(e) => console.log(e.target.value)}
+                      />
+                      <br />
+                      <br />
+                      {post.date_depart > [moment().format("YYYY-MM-DD")] ? (
+                        <span>expired</span>
+                      ) : null}
+
+                      <TextField
+                        label="note"
+                        variant="outlined"
+                        defaultValue={post.space}
+                        size="small"
+                        onChange={(e) => console.log(e.target.value)}
+                      />
+                    </center>
+
                     <td style={{ display: "grid" }}>
                       <br />
-                      <Button variant="contained" color="primary">
-                        Edit
+                      <Button
+                        variant="contained"
+                        style={{ background: "#007bff", color: "white" }}
+                      >
+                        <EditIcon />
                       </Button>
                     </td>
                   </Typography>
@@ -282,33 +348,45 @@ export default function BasicTabs() {
           }}
           class="profile-img"
         >
-          {photo ? (
-           <Avatar
-           alt={Storage + "avatar.png"}
-           src={Storage + photo}
-           aria-label="recipe"
-         ></Avatar>
-          ) : (
-            <img
+          <label htmlFor="photo">
+            {photo ? (
+              <Avatar
+                alt={Storage + "avatar.png"}
+                src={Storage + photo}
+                aria-label="recipe"
+              ></Avatar>
+            ) : (
+              <img
+                style={{
+                  maxWidth: 100,
+                  maxHeight: 100,
+                  borderRadius: "50%",
+                  borderBlockColor: "red",
+                }}
+                src={altimage}
+              />
+            )}
+            <input
+              type="file"
+              id="photo"
               style={{
-                maxWidth: 100,
-                maxHeight: 100,
-                borderRadius: "50%",
-                borderBlockColor: "red",
+                visibility: "hidden",
+                height: 0,
+                width: 0,
+                display: "none",
               }}
-              src={altimage}
             />
-          )}
-
+            <EditIcon  />
+          </label>
           <br />
           <Button onClick={logout} variant="contained" color="Secondary">
             logout
           </Button>
           <div class="col-md-2">
             <br />
-            <span style={{ color: "blue" }}>
+            <FormLabel style={{ color: "#007bff" }}>
               {name}&nbsp;{lastname}
-            </span>
+            </FormLabel>
           </div>
         </div>
       </center>

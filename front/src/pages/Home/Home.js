@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -17,6 +17,8 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import { countries } from "country-data";
 import theme from "../../components/Style/Style";
+import { Pagination } from "@mui/material";
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import "./Home.css";
@@ -67,28 +69,32 @@ const useStyles = makeStyles((theme) => ({
 export default function RecipeReviewCard(props) {
   const [postdata, setData] = useState([]);
   const [myorder, setorder] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(1);
 
-  const [weight, setwheight] = useState(1);
+  const [wheight, setwheight] = useState(1);
   const [description, setdescription] = useState("");
 
   async function neworder(postid) {
     const today = moment().format("YYYY-MM-DD");
-
     const body = {
       user_re_id: id,
       post_id: postid,
       order_status: "pending",
       date_order: today,
 
-      space: weight,
+      space: wheight,
 
       description: description,
     };
     try {
       await api.post("/orders", body);
-      toast("order  sended");
+      toast.success("The request has  been sent");
+      
+      let filter = [...postdata].filter((order) => order.post_id !== postid);
+      setData(filter);
     } catch (error) {
-      toast.error("order not sended");
+      toast.error("The request has not been sent");
     }
   }
 
@@ -98,22 +104,42 @@ export default function RecipeReviewCard(props) {
 
   const { id, photo } = user;
   const classes = useStyles();
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
 
   useEffect(() => {
-    const getPost = async () => {
-      const { data } = await api.get(`/filterpost/${id}`);
+    // const { data } = await api.get(`/filterpost/${id}`);
+    // setData(data);
+    async function fetchData() {
+      const response = await api.get(`/filterpost/${id}?page=${page}`);
+      const data = response.data.data;
+      const total = response.data.total;
+      setTotal(Math.ceil(total / 8));
       setData(data);
-    };
+    }
+
     const getorder = async () => {
       const { data } = await api.get(`/myorder/${id}`);
       setorder(data);
     };
     getorder();
-    getPost();
-  }, [id]);
-  if (postdata.length > 0)
+    fetchData();
+    
+  }, [id,page]);
+  if (postdata === undefined || postdata.length == 0) {
     return (
-      <center>
+      <div style={{marginTop:150}}>
+     
+        <Loading2 />
+       <h1 style={{color:"#007bff"}} >There are no new flights Available</h1> 
+       <SentimentVeryDissatisfiedIcon fontSize="large" />
+      </div>
+    )
+    
+  }
+    return (
+      <center >
         <br />
         <br />
         <br />
@@ -122,6 +148,7 @@ export default function RecipeReviewCard(props) {
           {postdata.map((post) => {
             return (
               <OrderCard
+                cost={post.cost}
                 v={post.id}
                 fullname={post.name + " " + post.lastname}
                 change={(e) => console.log(e.target.value)}
@@ -131,24 +158,21 @@ export default function RecipeReviewCard(props) {
                 to_country={countries[post.to_country].name}
                 from_country_code={post.from_country}
                 to_country_code={post.to_country}
+                note={(e) => setdescription(e.target.value)}
+                wheight={(e) => setwheight(e.target.value)}
+                order={(postid) => neworder(post.id)}
               />
             );
           })}
         </div>
+        <Pagination
+          count={total}
+          size="small"
+          // color="primary"
+          onChange={handleChange}
+        />
       </center>
     );
-  else {
-    return (
-      <>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <Loading2 />
-      </>
-    );
-  }
+    
+  
 }

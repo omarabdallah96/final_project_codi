@@ -16,7 +16,9 @@ import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { countries } from "country-data";
-import { TextField } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
+import SendIcon from "@mui/icons-material/Send";
+import WhatsApp from "@mui/icons-material/WhatsApp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,7 +64,7 @@ export default function RecipeReviewCard(props) {
         }
         action={
           <IconButton aria-label="settings">
-            <MoreVertIcon />
+            <WhatsApp color="primary" />
           </IconButton>
         }
         title={props.fullname}
@@ -71,37 +73,73 @@ export default function RecipeReviewCard(props) {
 
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
+        Cost  {props.cost} $/KG
           <tr>
             <td>{props.from_country}</td> &nbsp;
-           
-           
             <td>{props.to_country}</td>
           </tr>
           <tr>
-           
-            <td> <img
-              loading="lazy"
-              width="40"
-              height="20"
-              src={`https://flagcdn.com/w40/${props.from_country_code.toLowerCase()}.png`}
-              srcSet={`https://flagcdn.com/w40/${props.from_country_code.toLowerCase()}.png `}
-              alt=""
-            /></td>
-                        &nbsp;
-
-             <td> <img
-              loading="lazy"
-              width="40"
-              height="20"
-              src={`https://flagcdn.com/w40/${props.to_country_code.toLowerCase()}.png`}
-              srcSet={`https://flagcdn.com/w40/${props.to_country_code.toLowerCase()}.png`}
-              alt=""
-            /></td>
+            <td>
+              <img
+                loading="lazy"
+                width="40"
+                height="20"
+                src={`https://flagcdn.com/w40/${props.from_country_code.toLowerCase()}.png`}
+                srcSet={`https://flagcdn.com/w40/${props.from_country_code.toLowerCase()}.png `}
+                alt=""
+              />
+            </td>
+            &nbsp;
+            <td>
+              <img
+                loading="lazy"
+                width="40"
+                height="20"
+                src={`https://flagcdn.com/w40/${props.to_country_code.toLowerCase()}.png`}
+                srcSet={`https://flagcdn.com/w40/${props.to_country_code.toLowerCase()}.png`}
+                alt=""
+              />
+            </td>
           </tr>
-        <TextField />
+          <br />
+
+          <TextField
+            label="Order Wheight"
+            onInput={(e) => {
+              e.target.value = Math.max(0, parseInt(e.target.value))
+                .toString()
+                .slice(0, 2);
+            }}
+            type="number"
+            defaultValue="1"
+            variant="outlined"
+            size="small"
+            onChange={props.wheight}
+          />
+          <br />
+          <br />
+
+          <TextField
+            label="Note"
+            type="text"
+            defaultValue=""
+            variant="outlined"
+            size="small"
+            onChange={props.note}
+          />
+          <br />
+          <br />
+
+          <Button
+            style={{ color: "white", background: "#007bff", outline: "none" }}
+            variant="contained"
+            endIcon={<SendIcon />}
+            onClick={props.order}
+          >
+            order
+          </Button>
         </Typography>
       </CardContent>
-     
     </Card>
   );
 }

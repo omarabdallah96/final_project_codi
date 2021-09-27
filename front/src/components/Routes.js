@@ -14,12 +14,13 @@ export default function Routes() {
     palette: {
       primary: {
         // Purple and green play nicely together.
-        main: "#00000",
+        main: "#007bff",
       },
       secondary: {
         // This is green.A700 as hex.
-        main: '#11cb5f',
+        main: '#f50057',
       },
+     
     },
   });
   const {

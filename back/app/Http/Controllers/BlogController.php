@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use App\Models\Order;
-
+use Nette\Utils\Paginator;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -48,9 +48,11 @@ class BlogController extends Controller
 
         
         ->whereNotIn('user_id', [$id])
+        ->where('posts.date_depart', '>=', date('Y-m-d'))
+
         
         
-        ->get(['posts.id AS post_id',"users.*","posts.*"])
+        ->select(['posts.id AS post_id',"users.*","posts.*"])->paginate(8)
         
         ;
 
@@ -70,7 +72,11 @@ class BlogController extends Controller
     public function userpost(Request $request,$id )
     {
        
-        return Blog::where('user_id',$id)->get();
+        return Blog::where('user_id',$id)
+        
+       -> orderBy('post_date', 'DESC')    
+       
+       ->get();
 
     }
 

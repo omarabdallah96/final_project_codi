@@ -67,8 +67,8 @@ export default function SessionProvider({ children }) {
     if (error || !token) return toast.error(error);
 
     // get the data of the loggedin user
-    setCookie("token", token);
-    setCookie("id", id);
+    setCookie("token", token,30);
+    setCookie("id", id,30);
 
     let result = await fetch(`${sessionapi}api/user`, {
       headers: {
@@ -94,42 +94,36 @@ export default function SessionProvider({ children }) {
     updateSession({ user: { token: null } });
 
   }
-  async function register(email, username, password) {
-    let req = {
-      username: username,
-      email: email,
-      password: password,
-      role: "user",
-      name: "",
-      lastname: "",
-      status: "active",
-      address: "lebanon",
-      phone: "0",
-      photo: "kgOrcxjkELpYSGkSj2fsvRuAqICRZm1n5FUqyc3S.png",
+  // async function register(email, username, password) {
+  //   let req = {
+  //     username: username,
+  //     email: email,
+  //     password: password,
+  //     role: "user",
+  //     name: "",
+  //     lastname: "",
+  //     status: "active",
+  //     address: "lebanon",
+  //     phone: "0",
+  //     photo: "kgOrcxjkELpYSGkSj2fsvRuAqICRZm1n5FUqyc3S.png",
 
-    };
-    let body={
-      "username": "12",
-        "email": "omar",
-        "photo": "kgOrcxjkELpYSGkSj2fsvRuAqICRZm1n5FUqyc3S.png",
-        password: password,
+  //   };
+  
+  //   console.log(req);
+  //   let result = await axios.post(`${sessionapi}api/uploadimage`, req);
 
-    }
-    console.log(req);
-    let result = await axios.post(`${sessionapi}api/uploadimage`, req);
+  //   console.log(result);
 
-    console.log(result);
-
-    // return from the function if you have an error
-    // if (error || !token) return toast.error(error);
-  }
+  //   // return from the function if you have an error
+  //   // if (error || !token) return toast.error(error);
+  // }
 
   const context = {
     session,
     actions: {
       login,
       logout,
-      register,
+      
       loggedin,
     },
   };
