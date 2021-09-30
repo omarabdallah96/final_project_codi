@@ -68,7 +68,9 @@ class OrderController extends Controller
      */
     public function myorder(Order $order ,$id)
     {
-        return  Order::join('users','users.id','=','user_re_id')->where('orders.user_re_id',$id)->get(['orders.id AS order_id','orders.*','users.*']);
+        return  Order::join('users','users.id','=','user_re_id')
+        ->where('orders.user_re_id',$id)
+        ->get(['orders.id AS order_id','orders.*','users.*']);
     }
 
     /**
@@ -125,6 +127,22 @@ class OrderController extends Controller
 
          ->where('posts.user_id',$id)->get()
          ;
+
+
+    }
+    public function updateorder(Request $request ,$id)
+    {
+         
+           $order=Order::find($id);
+
+           $order -> fill($request -> all());
+           $update= $order -> update();
+           if( $update){
+            return response()->json(['succes' => 'Order  Updated'], 200);
+
+           }
+
+           return response()->json(['error' => 'Order not updated'], 500);
 
 
     }

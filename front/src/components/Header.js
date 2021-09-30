@@ -36,13 +36,13 @@ export default function ButtonAppBar() {
 
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 <Link to="/newpost">
-                <PostAddIcon fontSize="large"  color="primary" />
+                <PostAddIcon fontSize="large"  style={{color:"#1976d2"}} />
 
                 </Link>
 
               </Typography>
               <Link to="profile" sx={{ flexGrow: 1 }}>
-                <PersonIcon fontSize="large"  xs style={{ color: "primary" }} />
+                <PersonIcon fontSize="large"  xs style={{ color: "#1976d2" }} />
               
               </Link>
             </Toolbar>

@@ -23,7 +23,24 @@ import { countries } from "country-data";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import moment from "moment";
-
+import CountrySelect from "../../components/country/countrylist";
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import { useHistory, Link } from "react-router-dom";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import OrderCard from "../../components/OrderCard/OrderCard";
+import Edit from "@mui/icons-material/Edit";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import PresentToAllOutlinedIcon from "@mui/icons-material/PresentToAllOutlined";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import WhatsApp from "@mui/icons-material/WhatsApp";
+import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
+import NoteAltOutlinedIcon from "@mui/icons-material/NoteAltOutlined";
+import DeleteOutline from "@mui/icons-material/DeleteOutline";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -58,7 +75,13 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs() {
+  const [diplayorder, setDisplay] = useState(true);
   const altimage = Storage + "avatar.png";
+  let history = useHistory();
+  const [alignment, setAlignment] = React.useState("received");
+  const handletoggle = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
 
   const [value, setValue] = React.useState(0);
   const {
@@ -73,6 +96,16 @@ export default function BasicTabs() {
     } catch (error) {
       return toast.error("error");
     }
+  };
+  const updateorder = async (updated_id, orderstatus) => {
+    try {
+      let { success } = await api.put(`updateorder/${updated_id}`, {
+        order_status: orderstatus,
+      });
+      if (success) {
+        console.log("ok");
+      }
+    } catch (error) {}
   };
 
   const { id, email, name, lastname, address, username, photo, phone } = user;
@@ -93,115 +126,72 @@ export default function BasicTabs() {
       toast.error(error);
     }
   };
+  const updatedpost = async () => {};
 
-  const About = () => {
-    return (
-      <center className="profie-container ">
-        <Paper
-          elevation={3}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            paddingRight: 20,
-            paddingLeft: 20,
-          }}
-        >
-          <br />
-          <TextField
-            id="outlined-basic"
-            value={email}
-            label="email"
-            variant="outlined"
-          />
-          <br />
-          <TextField
-            id="outlined-basic"
-            value={username}
-            label="@username"
-            variant="outlined"
-          />
-          <br />
-          <TextField
-            id="outlined-basic"
-            value={phone}
-            label="phone"
-            variant="outlined"
-          />
-          <br />
-          <TextField
-            id="outlined-basic"
-            value={address}
-            label="address"
-            variant="outlined"
-          />
-          <br />
-          <Button variant="contained" color="primary">
-            update profile
-          </Button>
-          <br />
-        </Paper>
-      </center>
-    );
-  };
+  const [update_email, setEmail] = useState("");
+  const [update_username, setUsername] = useState("");
 
-  const Myorder = () => {
-    if (order === undefined || order.length == 0) {
-      return <div>Make Some Order</div>;
+  const hadleupdate = async (event) => {
+    event.preventDefault();
+    const fileInput = document.querySelector("#photo").files[0];
+    const formData = new FormData();
+
+    if (fileInput !== undefined) {
+      formData.append("name", state.name);
+      formData.append("lastname", state.lastname);
+      formData.append("username", state.username);
+      formData.append("phone", state.phone);
+
+      formData.append("email", state.email);
+      formData.append("status", "active");
+
+      formData.append("photo", fileInput);
+
+      formData.append("address", "selectdcountry");
+    } else {
+      formData.append("name", state.name);
+      formData.append("lastname", state.lastname);
+      formData.append("username", state.username);
+      formData.append("phone", state.phone);
+
+      formData.append("email", state.email);
+      formData.append("status", "active");
+
+      formData.append("address", state.address);
     }
-    return (
-      <div>
-        {order ? (
-          <div className="parent-container">
-            {order.map((myorder) => (
-              <Paper
-                style={{
-                  marginLeft: 10,
-                  display: "flex",
-                  flexDirection: "column",
-                  textAlign: "center",
-                  paddingLeft: 20,
-                  paddingRight: 20,
-                }}
-                square={true}
-                elevation={3}
-              >
-                {myorder.order_id}
-                <span># {myorder.post_id}</span>
-                <TextField
-                  align="center"
-                  label="Order Status"
-                  value={myorder.order_status}
-                />
-                <TextField
-                  fullWidth
-                  label="Order Date"
-                  type="date"
-                  value={myorder.date_order}
-                />
-                <TextField label="" value={myorder.space} />
-                <TextField value={myorder.description} />
-                <br />
-                <Button variant="contained" color="primary">
-                  Update Order
-                </Button>
-                &nbsp;
-                <Button
-                  onClick={(id) => deleteOrder(myorder.order_id)}
-                  variant="contained"
-                  color="Error"
-                >
-                  Cancel
-                </Button>
-                <br />
-              </Paper>
-            ))}
-          </div>
-        ) : (
-          <div>no</div>
-        )}
-      </div>
-    );
+
+    try {
+      const { success } = await api.post(`/updateprofile/${id}`, formData, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      toast.success("Your Profile Updated");
+      history.push("/");
+    } catch (error) {
+      toast.error("Please Your Inputs");
+    }
   };
+  const handlupdate = (event) => {
+    let value = event.target.value;
+    let name = event.target.name;
+
+    setstate((prevalue) => {
+      return {
+        ...prevalue, // Spread Operator
+        [name]: value,
+      };
+    });
+  };
+  let [state, setstate] = useState({
+    name: "",
+    lastname: "",
+    email: "",
+    username: "",
+    address: "",
+  });
 
   useEffect(() => {
     //get my post
@@ -221,120 +211,30 @@ export default function BasicTabs() {
       const { data } = await api.get(`/postorder/${id}`);
       setReceivd(data);
     };
+    const getmyinfo = async () => {
+      const { data } = await api.get(`/user`);
+      setstate(data);
+    };
+
     getpost();
     getsentorder();
     getreceivdorder();
-  }, [id]);
+    getmyinfo();
 
-  const Post = () => {
-    if (mypost === undefined || mypost.length == 0) {
-      return <div>No Post</div>;
+    switch (alignment) {
+      case "received":
+        setDisplay(true);
+
+        break;
+      case "sent":
+        setDisplay(false);
+
+        break;
     }
-    return (
-      <div>
-        {mypost ? (
-          <div className="parent-container">
-            {mypost.map((post) => (
-              <Card
-                elevation={5}
-                key={post.id}
-                style={{ marginBottom: 10, marginLeft: 10 }}
-                sx={{ maxWidth: 345 }}
-              >
-                <CardHeader
-                  avatar={
-                    <Avatar
-                      alt={Storage + "avatar.png"}
-                      src={Storage + photo}
-                      aria-label="recipe"
-                    ></Avatar>
-                  }
-                  action={
-                    <IconButton aria-label="settings">
-                      <DeleteOutlineIcon
-                        onClick={() => deletepost(post.id)}
-                        color="secondary"
-                      />
-                    </IconButton>
-                  }
-                  title={post.date_depart}
-                />
-
-                <CardContent>
-                  <Typography variant="body2" color="text.secondary">
-                    <center>
-                      <td>
-                        {countries[post.to_country].name}
-                        <br />
-
-                        <img
-                          loading="lazy"
-                          width="30"
-                          height="20"
-                          src={`https://flagcdn.com/w40/${post.to_country.toLowerCase()}.png`}
-                          srcSet={`https://flagcdn.com/w40/${post.to_country.toLowerCase()}.png 2x`}
-                          alt=""
-                        />
-                      </td>
-                      <td>
-                        {countries[post.from_country].name}
-                        <br />
-
-                        <img
-                          loading="lazy"
-                          width="30"
-                          height="20"
-                          src={`https://flagcdn.com/w40/${post.from_country.toLowerCase()}.png`}
-                          srcSet={`https://flagcdn.com/w40/${post.from_country.toLowerCase()}.png 2x`}
-                          alt=""
-                        />
-                      </td>
-                      <br />
-                      <TextField
-                        label="space"
-                        variant="outlined"
-                        defaultValue={post.space}
-                        size="small"
-                        onChange={(e) => console.log(e.target.value)}
-                      />
-                      <br />
-                      <br />
-                      {post.date_depart > [moment().format("YYYY-MM-DD")] ? (
-                        <span>expired</span>
-                      ) : null}
-
-                      <TextField
-                        label="note"
-                        variant="outlined"
-                        defaultValue={post.space}
-                        size="small"
-                        onChange={(e) => console.log(e.target.value)}
-                      />
-                    </center>
-
-                    <td style={{ display: "grid" }}>
-                      <br />
-                      <Button
-                        variant="contained"
-                        style={{ background: "#007bff", color: "white" }}
-                      >
-                        <EditIcon />
-                      </Button>
-                    </td>
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div>no</div>
-        )}
-      </div>
-    );
-  };
+  }, [id, alignment]);
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", background: "white" }}>
       <center>
         <br />
         <br />
@@ -348,36 +248,25 @@ export default function BasicTabs() {
           }}
           class="profile-img"
         >
-          <label htmlFor="photo">
-            {photo ? (
-              <Avatar
-                alt={Storage + "avatar.png"}
-                src={Storage + photo}
-                aria-label="recipe"
-              ></Avatar>
-            ) : (
-              <img
-                style={{
-                  maxWidth: 100,
-                  maxHeight: 100,
-                  borderRadius: "50%",
-                  borderBlockColor: "red",
-                }}
-                src={altimage}
-              />
-            )}
-            <input
-              type="file"
-              id="photo"
+          {photo ? (
+            <Avatar
+              sx={{ width: 56, height: 56 }}
+              alt={Storage + "avatar.png"}
+              src={Storage + state.photo}
+              aria-label="recipe"
+            ></Avatar>
+          ) : (
+            <img
               style={{
-                visibility: "hidden",
-                height: 0,
-                width: 0,
-                display: "none",
+                maxWidth: 200,
+                maxHeight: 200,
+                borderRadius: "50%",
+                borderBlockColor: "red",
               }}
+              src={altimage}
             />
-            <EditIcon  />
-          </label>
+          )}
+
           <br />
           <Button onClick={logout} variant="contained" color="Secondary">
             logout
@@ -397,6 +286,7 @@ export default function BasicTabs() {
           onChange={handleChange}
           aria-label="basic tabs example"
           centered
+          inkBarStyle={{ background: "red" }}
         >
           <Tab style={{ outlineWidth: 0 }} label="Posts" {...a11yProps(0)} />
           <Tab style={{ outlineWidth: 0 }} label="Info" {...a11yProps(1)} />
@@ -404,13 +294,500 @@ export default function BasicTabs() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <Post />
+        <>
+          <div className="parent-container">
+            {mypost.length > 0 ? (
+              mypost.map((post) => (
+                <>
+                  <OrderCard
+                    delete
+                    cost={post.cost}
+                    v={post.id}
+                    fullname={name + lastname}
+                    change={(e) => console.log(e.target.value)}
+                    post_date={post.post_date}
+                    avatar={Storage + post.photo}
+                    from_country={countries[post.from_country].name}
+                    to_country={countries[post.to_country].name}
+                    from_country_code={post.from_country}
+                    to_country_code={post.to_country}
+                    // note={(e) => setdescription(e.target.value)}
+                    delete={(postid) => updatedpost(post.id)}
+                  />
+                </>
+              ))
+            ) : (
+              <div>
+                You Dont Have Any Post &nbsp;
+                <Link style={{ textDecoration: "none" }} to="/newpost">
+                  <Button
+                    size="small"
+                    endIcon={<Edit fontSize="small" />}
+                    style={{ background: "#007bff", color: "white" }}
+                    variant="outlined"
+                  >
+                    Post now
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </div>
+        </>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <About />
+        <Container component="main" maxWidth="xs">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              component="form"
+              noValidate
+              onSubmit={(e) => hadleupdate(e)}
+              sx={{ mt: 3 }}
+            >
+              <label htmlFor="photo">
+                <AddAPhotoIcon />
+                <input
+                  hidden
+                  required
+                  type="file"
+                  id="photo"
+                  accept="image/png, image/gif, image/jpeg"
+                  onchange={(evt) => {
+                    const [file] = document.querySelector("#photo");
+                    if (file) {
+                      document.querySelector("#image").src =
+                        URL.createObjectURL(file);
+                    }
+                  }}
+                />
+              </label>
+              <img src="" alt="" id="image" srcset="" />
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="First name"
+                    value={state.name}
+                    onChange={handlupdate}
+                    name="name"
+                    autoComplete="off"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    value={state.lastname}
+                    required
+                    fullWidth
+                    label="Last Name"
+                    onChange={handlupdate}
+                    name="lastname"
+                    autoComplete="off"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    value={state.username}
+                    required
+                    type="text"
+                    fullWidth
+                    label="Username"
+                    autoComplete="off"
+                    name="username"
+                    onChange={handlupdate}
+                    autoComplete="off"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    value={state.email}
+                    fullWidth
+                    type="email"
+                    label="Email"
+                    name="email"
+                    autoComplete="off"
+                    onChange={handlupdate}
+                    autoComplete="off"
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    defaultValue={state.phone}
+                    required
+                    fullWidth
+                    type="number"
+                    label="Phone"
+                    name="phone"
+                    onChange={handlupdate}
+                    autoComplete="off"
+                  />
+                  <br />
+                  <br />
+                  <Grid item xs={12}>
+                    <CountrySelect
+                      required
+                      default={state.address}
+                      fullWidth
+                      label="Address"
+                      name="address"
+                      autoComplete="off"
+                      selectedcountry={handlupdate}
+                      autoComplete="off"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Button
+                style={{ marginTop: 10, background: "#2196F3", color: "white" }}
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Update
+              </Button>
+              <Grid container justifyContent="flex-end">
+                <Grid item></Grid>
+              </Grid>
+            </Box>
+          </Box>
+        </Container>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Myorder />
+        <ToggleButtonGroup
+          color="primary"
+          value={alignment}
+          exclusive
+          onChange={handletoggle}
+        >
+          <ToggleButton
+            style={{
+              marginRight: 10,
+              outline: "none",
+              fontSize: "medium",
+              width: 160,
+              border: "1px solid ",
+            }}
+            value="sent"
+          >
+            &nbsp; sent &nbsp;
+            <PresentToAllOutlinedIcon />
+            &nbsp;
+          </ToggleButton>
+          <ToggleButton
+            variant="outline"
+            fullWidth
+            style={{
+              marginRight: 10,
+              outline: "none",
+              fontSize: "medium",
+              width: 160,
+              border: "1px solid ",
+            }}
+            value="received"
+          >
+            &nbsp; Received &nbsp;
+            <PresentToAllOutlinedIcon style={{ transform: "rotate(180deg)" }} />
+            &nbsp;
+          </ToggleButton>
+        </ToggleButtonGroup>
+
+        {received.length > 0 && diplayorder ? (
+          <>
+            <br />
+            <br />
+
+            <div id="received" className="parent-container">
+              {received.map((myorder) => (
+                <Card
+                  elevation={3}
+                  sx={{ maxWidth: 345, margin: " 10px 10px" }}
+                >
+                  <CardHeader
+                    avatar={
+                      <Avatar
+                        src={Storage + myorder.photo}
+                        sx={{ bgcolor: red[500] }}
+                        aria-label="recipe"
+                      ></Avatar>
+                    }
+                    action={
+                      <IconButton aria-label="settings">
+                        <a
+                          href={`https://api.whatsapp.com/send?phone=+${phone}`}
+                          target="_blank"
+                        >
+                          <WhatsApp />
+                        </a>
+                      </IconButton>
+                    }
+                    title={myorder.name + " " + myorder.lastname}
+                    subheader={myorder.date_order}
+                  />
+
+                  <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                      <Typography variant="" color="text.secondary">
+                        <img
+                          loading="lazy"
+                          width="40"
+                          height="20"
+                          src={`https://flagcdn.com/w40/${myorder.address.toLowerCase()}.png`}
+                          srcSet={`https://flagcdn.com/w40/${myorder.address.toLowerCase()}.png`}
+                          alt=""
+                        />
+                      </Typography>
+                      <br />
+
+                      <Typography
+                        style={{
+                          marginTop: 10,
+                          textAlign: "center",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "row",
+                        }}
+                        variant="caption"
+                        color="text.secondary"
+                      >
+                        <LocalMallOutlinedIcon
+                          style={{ outline: "none", color: "#007bff" }}
+                        />
+                        <span> {myorder.space} KG</span>
+                      </Typography>
+                      <Typography
+                        style={{
+                          marginTop: 10,
+                          textAlign: "center",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "row",
+                        }}
+                        variant="caption"
+                        color="text.secondary"
+                      >
+                        <NoteAltOutlinedIcon
+                          style={{ outline: "none", color: "#007bff" }}
+                        />
+                        {myorder.description}
+                      </Typography>
+                      <Typography
+                        style={{
+                          marginTop: 10,
+                          textAlign: "center",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "row",
+                        }}
+                        variant="caption"
+                        color="text.secondary"
+                      >
+                        <Button
+                          variant="outlined"
+                          name="rejected"
+                          color="secondary"
+                          style={{ outline: "none", background: "seconday" }}
+                          onClick={(e) =>
+                            updateorder(myorder.post_id, e.currentTarget.name)
+                          }
+                        >
+                          <HighlightOffOutlinedIcon />
+                        </Button>
+                        &nbsp; &nbsp;
+                        <Button
+                          name="accepted"
+                          variant="outlined"
+                          style={{ outline: "none", background: "#007bff" }}
+                          onClick={(e) =>
+                            updateorder(myorder.post_id, e.currentTarget.name)
+                          }
+                        >
+                          <CheckOutlinedIcon style={{ color: "white" }} />
+                        </Button>
+                      </Typography>
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div>
+            {received.length < 1 && diplayorder ? (
+              <>
+                <br />
+                <br />
+                You did not receive any order
+                <br />
+                <br />
+                <Link style={{ textDecoration: "none" }} to="/">
+                  <Button
+                    size="small"
+                    endIcon={<HomeOutlinedIcon fontSize="small" />}
+                    style={{ background: "#007bff", color: "white" }}
+                    variant="outlined"
+                  >
+                    Go Home
+                  </Button>
+                </Link>
+              </>
+            ) : null}
+          </div>
+        )}
+        {order.length > 0 && !diplayorder ? (
+          <>
+            <br />
+            <br />
+            <div id="sent" className="parent-container">
+              {order.map((myorder) => (
+                 <Card
+                 elevation={3}
+                 sx={{ maxWidth: 345, margin: " 10px 10px" }}
+               >
+                 <CardHeader
+                   avatar={
+                     <Avatar
+                       src={Storage + myorder.photo}
+                       sx={{ bgcolor: red[500] }}
+                       aria-label="recipe"
+                     ></Avatar>
+                   }
+                   action={
+                     <IconButton aria-label="settings">
+                       <a
+                         href={`https://api.whatsapp.com/send?phone=+${phone}`}
+                         target="_blank"
+                       >
+                         <WhatsApp />
+                       </a>
+                     </IconButton>
+                   }
+                   title={myorder.name + " " + myorder.lastname}
+                   subheader={myorder.date_order}
+                 />
+
+                 <CardContent>
+                   <Typography variant="body2" color="text.secondary">
+                     <Typography variant="" color="text.secondary">
+                       <img
+                         loading="lazy"
+                         width="40"
+                         height="20"
+                         src={`https://flagcdn.com/w40/${myorder.address.toLowerCase()}.png`}
+                         srcSet={`https://flagcdn.com/w40/${myorder.address.toLowerCase()}.png`}
+                         alt=""
+                       />
+                     </Typography>
+                     <br />
+
+                     <Typography
+                       style={{
+                         marginTop: 10,
+                         textAlign: "center",
+                         display: "flex",
+                         justifyContent: "center",
+                         alignItems: "center",
+                         flexDirection: "row",
+                       }}
+                       variant="caption"
+                       color="text.secondary"
+                     >
+                       <LocalMallOutlinedIcon
+                         style={{ outline: "none", color: "#007bff" }}
+                       />
+                       <span> {myorder.space} KG</span>
+                     </Typography>
+                     <Typography
+                       style={{
+                         marginTop: 10,
+                         textAlign: "center",
+                         display: "flex",
+                         justifyContent: "center",
+                         alignItems: "center",
+                         flexDirection: "row",
+                       }}
+                       variant="caption"
+                       color="text.secondary"
+                     >
+                       <NoteAltOutlinedIcon
+                         style={{ outline: "none", color: "#007bff" }}
+                       />
+                       {myorder.description}
+                     </Typography>
+                     <Typography
+                       style={{
+                         marginTop: 10,
+                         textAlign: "center",
+                         display: "flex",
+                         justifyContent: "center",
+                         alignItems: "center",
+                         flexDirection: "row",
+                       }}
+                       variant="caption"
+                       color="text.secondary"
+                     >
+                       <Button
+                         variant="outlined"
+                         name="rejected"
+                         color="secondary"
+                         style={{ outline: "none", background: "seconday" }}
+                         onClick={(e) =>
+                           updateorder(myorder.post_id, e.currentTarget.name)
+                         }
+                       >
+                         <HighlightOffOutlinedIcon />
+                       </Button>
+                       &nbsp; &nbsp;
+                       <Button
+                         name="accepted"
+                         variant="outlined"
+                         style={{ outline: "none", background: "#007bff" }}
+                         onClick={(e) =>
+                           updateorder(myorder.post_id, e.currentTarget.name)
+                         }
+                       >
+                         <CheckOutlinedIcon style={{ color: "white" }} />
+                       </Button>
+                     </Typography>
+                   </Typography>
+                 </CardContent>
+               </Card>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div>
+            {!diplayorder && order.length < 1 ? (
+              <div>
+                <br />
+                <br />
+                You have not sent any request
+                <br />
+                <br />
+                <Link style={{ textDecoration: "none" }} to="/">
+                  <Button
+                    size="small"
+                    endIcon={<AddShoppingCartIcon fontSize="small" />}
+                    style={{ background: "#007bff", color: "white" }}
+                    variant="outlined"
+                  >
+                    Order now
+                  </Button>
+                </Link>
+              </div>
+            ) : null}
+          </div>
+        )}
       </TabPanel>
     </Box>
   );

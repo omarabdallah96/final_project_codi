@@ -5,6 +5,9 @@ import NotFound from "../pages/NotFound";
 import Account from "../pages/Account";
 import Home from "../pages//Home/Home";
 import Profile from "../pages/Profile/Profile";
+import Profile2 from "../pages/Profile/Profile2";
+
+
 import CreatePost from "../pages/Post/Createpost";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -37,10 +40,12 @@ export default function Routes() {
       <PrivateRoute role={role} exact path="/" component={Home} token={token} />
       <PrivateRoute role={role} exact path="/newpost" component={CreatePost} token={token} />
 
-      <PrivateRoute
+      
+       <PrivateRoute
         role={role}
-        path="/dashnoard"
-        component={Profile}
+        path="/profile2"
+        component={Profile2
+        }
         token={token}
       />
       <PrivateRoute

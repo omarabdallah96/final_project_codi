@@ -6,13 +6,14 @@ import Autocomplete from '@mui/material/Autocomplete';
 export default function CountrySelect(props) {
   return (
     <Autocomplete
-    defaultValue={props.default}
-
       id="country-select-demo"
       // sx={{ maxWidth: 300 }}
       maxWidth
       options={countries}
       autoHighlight
+      defaultValue={{ code: [props.default]}}
+
+
       getOptionLabel={(option) =>  option.code  }
       renderOption={(props, option) => (
         <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -33,6 +34,7 @@ export default function CountrySelect(props) {
           {...params}
           onSelect={props.selectedcountry}
           label={props.label}
+          defaultValue={props.default}
           inputProps={{
             ...params.inputProps,
             autoComplete: 'off', // disable autocomplete and autofill

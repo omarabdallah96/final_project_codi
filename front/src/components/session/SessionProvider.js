@@ -8,16 +8,23 @@ import sessionapi from '../API/sessionapi'
 
 export default function SessionProvider({ children }) {
   let token = getCookie("token");
+  let id = getCookie("id");
+
+
   const [loggedin, setLoggedin] = useState(false);
   const [session, setValue] = useState({
     user: {
       token: getCookie("token"),
+      id: getCookie("id"),
+
     },
   });
 
   useEffect(() => {
     function initializeSession() {
       let token = getCookie("token");
+      let id = getCookie("id");
+
       if (token)
         fetch(`${sessionapi}api/user`, {
           headers: {
@@ -37,7 +44,7 @@ export default function SessionProvider({ children }) {
           });
     }
     initializeSession();
-  }, [token]);
+  }, [token,id]);
 
   function updateSession(nextSession) {
     let value =

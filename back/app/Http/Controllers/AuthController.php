@@ -73,26 +73,27 @@ class AuthController extends Controller
         return response()->json([
             'token' => $token,
             'token_type'   => 'bearer',
-            'expires_in'   => auth('api')->factory()->getTTL() * 60
+            'expires_in'   => auth('api')->factory()->getTTL() * 60*60
         ]);
     }
     public function uploadimage(Request $request ){
-        $task = new User();
+        
+        $user = new User();
 
-        $task->fill($request->all());
+        $user->fill($request->all());
         
         if($photo=$request->file('photo'))
         {
             $photo=$request->photo;
             $photo->store('public/users_images/');
-            $task->photo = $photo->hashName();
+            $user->photo = $photo->hashName();
         }
 
-        if($task->save()){
+        if($user->save()){
 
             return response()->json([
                 "success"=>true,
-                "tasks"=>$task
+                "users"=>$user
             ]);
         }else{
             return response()->json([
@@ -129,4 +130,44 @@ class AuthController extends Controller
           }
 
     }
+    public function updateprofile(Request $request,$id ){
+        $user=User::find($id);
+        $file=storage_path().'/app/public/users_images/'.$user->photo;
+        
+           if ($user) {
+          if (!$files = $request->file('photo')) {
+             $user -> fill($request -> all());
+            $user -> update();
+            return response()->json([
+                "success"=>true,
+                "profile"=>"profile  updated"
+                 ]);
+            }
+            $destinationPath = storage_path().'/app/public/users_images/';
+            $profileImage =$files->hashName();
+            $files->move($destinationPath, $profileImage);
+            $update['photo'] = $profileImage;
+            if ($user) {
+                $user -> fill($request -> all());
+                $user['photo'] = "$profileImage";
+                $user -> update();
+                if ($file){
+                    unlink($file);
+
+                }
+                return response()->json([
+         "success"=>true,
+         "profile"=>"profile  updated"
+          ]);
+            }
+        }
+ 
+      
+   
+        return response()->json([
+        "success"=>false,
+        "image"=>"image not deleted deleted"
+    ]);
+    }
+
 }

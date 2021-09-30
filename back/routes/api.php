@@ -30,9 +30,14 @@ Route::post('uploadimage', ['App\Http\Controllers\AuthController', 'uploadimage'
 
 Route::get('postorder/{id}', ['App\Http\Controllers\OrderController', 'postorder']);
 
+Route::post('/updateprofile/{id}', ['App\Http\Controllers\AuthController', 'updateprofile']);
+
 
 Route::delete('deleteOrder/{id}', ['App\Http\Controllers\OrderController', 'deleteOrder']);
-    
+
+Route::put('updateorder/{id}', ['App\Http\Controllers\OrderController', 'updateorder']);
+Route::get('myorder/{id}', ['App\Http\Controllers\OrderController', 'myorder']);
+
 Route::group(['middleware' => ['jwt.user']], function() {
     Route::post('/logout', ['App\Http\Controllers\AuthController', 'logout']);
     Route::resource('blogs', '\App\Http\Controllers\BlogController');
@@ -43,9 +48,11 @@ Route::group(['middleware' => ['jwt.user']], function() {
     Route::get('userpost/{id}', ['App\Http\Controllers\BlogController', 'userpost']);
 
     //my order
-    Route::get('myorder/{id}', ['App\Http\Controllers\OrderController', 'myorder']);
+
 
     
+
+
 
     Route::delete('deleteimage/{oldImage}', ['App\Http\Controllers\AuthController', 'imageDelete']);
     Route::get('filterpost/{id}', ['App\Http\Controllers\BlogController', 'index']);

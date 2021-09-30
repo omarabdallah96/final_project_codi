@@ -19,6 +19,8 @@ import { countries } from "country-data";
 import { Button, TextField } from "@material-ui/core";
 import SendIcon from "@mui/icons-material/Send";
 import WhatsApp from "@mui/icons-material/WhatsApp";
+import DeleteOutline from "@mui/icons-material/DeleteOutline";
+import Edit from "@mui/icons-material/Edit";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,10 +50,7 @@ export default function RecipeReviewCard(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
+ 
   return (
     <Card elevation={3} className={classes.root}>
       <CardHeader
@@ -64,7 +63,17 @@ export default function RecipeReviewCard(props) {
         }
         action={
           <IconButton aria-label="settings">
-            <WhatsApp color="primary" />
+            {props.wp ? (
+              <a
+                href={`https://api.whatsapp.com/send?phone=${props.wplink}`}
+                target="_blank"
+              >
+                <WhatsApp style={{color:"rgb(0, 123, 255)"}}/>
+              </a>
+            ) : null}
+            {props.delete ? (
+              <DeleteOutline onClick={props.delete} style={{color:"rgb(0, 123, 255)"}} />
+            ) : null}
           </IconButton>
         }
         title={props.fullname}
@@ -73,36 +82,37 @@ export default function RecipeReviewCard(props) {
 
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-        Cost  {props.cost} $/KG
-          <tr>
-            <td>{props.from_country}</td> &nbsp;
-            <td>{props.to_country}</td>
-          </tr>
-          <tr>
-            <td>
-              <img
-                loading="lazy"
-                width="40"
-                height="20"
-                src={`https://flagcdn.com/w40/${props.from_country_code.toLowerCase()}.png`}
-                srcSet={`https://flagcdn.com/w40/${props.from_country_code.toLowerCase()}.png `}
-                alt=""
-              />
-            </td>
-            &nbsp;
-            <td>
-              <img
-                loading="lazy"
-                width="40"
-                height="20"
-                src={`https://flagcdn.com/w40/${props.to_country_code.toLowerCase()}.png`}
-                srcSet={`https://flagcdn.com/w40/${props.to_country_code.toLowerCase()}.png`}
-                alt=""
-              />
-            </td>
-          </tr>
-          <br />
-
+          Cost {props.cost} $/KG
+          <center>
+            <tr>
+              <td>{props.from_country}</td> &nbsp;
+              <td>{props.to_country}</td>
+            </tr>
+            <tr>
+              <td>
+                <img
+                  loading="lazy"
+                  width="40"
+                  height="20"
+                  src={`https://flagcdn.com/w40/${props.from_country_code.toLowerCase()}.png`}
+                  srcSet={`https://flagcdn.com/w40/${props.from_country_code.toLowerCase()}.png `}
+                  alt=""
+                />
+              </td>
+              &nbsp;
+              <td>
+                <img
+                  loading="lazy"
+                  width="40"
+                  height="20"
+                  src={`https://flagcdn.com/w40/${props.to_country_code.toLowerCase()}.png`}
+                  srcSet={`https://flagcdn.com/w40/${props.to_country_code.toLowerCase()}.png`}
+                  alt=""
+                />
+              </td>
+            </tr>
+            <br />
+          </center>
           <TextField
             label="Order Wheight"
             onInput={(e) => {
@@ -118,7 +128,6 @@ export default function RecipeReviewCard(props) {
           />
           <br />
           <br />
-
           <TextField
             label="Note"
             type="text"
@@ -129,15 +138,26 @@ export default function RecipeReviewCard(props) {
           />
           <br />
           <br />
-
-          <Button
-            style={{ color: "white", background: "#007bff", outline: "none" }}
-            variant="contained"
-            endIcon={<SendIcon />}
-            onClick={props.order}
-          >
-            order
-          </Button>
+          {props.order ? (
+            <Button
+              style={{ color: "white", background: "#007bff", outline: "none" }}
+              variant="contained"
+              endIcon={<SendIcon />}
+              onClick={props.order}
+            >
+              order
+            </Button>
+          ) : null}
+          {props.delete ? (
+            <Button
+              style={{ color: "white", background: "#007bff", outline: "none" }}
+              variant="contained"
+              endIcon={<Edit />}
+              onClick={props.delete}
+            >
+              Edit
+            </Button>
+          ) : null}
         </Typography>
       </CardContent>
     </Card>

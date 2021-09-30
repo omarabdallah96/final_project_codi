@@ -13,7 +13,7 @@ import travel from "../assets/travel.png";
 import api from "../components/API/API";
 import CountrySelect from "../components/country/countrylist";
 import { Box } from "@mui/system";
-import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
+import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { toast } from "react-toastify";
 import Loading from "../components/Loading/Loading";
 
@@ -109,6 +109,8 @@ export default function SignIn() {
     event.preventDefault();
     const fileInput = document.querySelector("#photo");
     const formData = new FormData();
+    const email=regemail;
+    const password=regpassword
     formData.append("name", regname);
     formData.append("lastname", reglastname);
     formData.append("username", regusername);
@@ -133,6 +135,7 @@ export default function SignIn() {
       photo: fileInput,
       role: "user",
     };
+    console.log(formData);
     try {
       await api.post("/uploadimage", formData, {
         headers: {
@@ -140,16 +143,13 @@ export default function SignIn() {
           "Content-Type": "multipart/form-data",
         },
       });
-      setaccount(true);
-      toast.success("saved")
-      
-    } catch (error) {
-      toast.error("Please Your Inputs")
+      toast.success(`Welcome ${regname}`);
+      await     login({email,password});
 
-      
+    } catch (error) {
+      toast.error("Please Your Inputs");
     }
 
-  
   };
 
   return (
@@ -219,9 +219,8 @@ export default function SignIn() {
         <Container className={classes.root} component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-            </Avatar>
-            
+            <Avatar className={classes.avatar}></Avatar>
+
             <Typography component="h1" variant="h5">
               Create New Account
             </Typography>
@@ -230,34 +229,31 @@ export default function SignIn() {
               enctype="multipart/form-data"
               className={classes.form}
             >
-              <Box style={{display:"flex"}}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                
-                label="First Name"
-                autoComplete="off"
-                autoFocus
-                name="regname"
-                value={regname}
-                onChange={handleChange}
-              />
-              &nbsp;
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                label="Last Name"
-                autoComplete="off"
-                
-                name="reglastname"
-                value={reglastname}
-                onChange={handleChange}
-              />
-
+              <Box style={{ display: "flex" }}>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  label="First Name"
+                  autoComplete="off"
+                  autoFocus
+                  name="regname"
+                  value={regname}
+                  onChange={handleChange}
+                />
+                &nbsp;
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  label="Last Name"
+                  autoComplete="off"
+                  name="reglastname"
+                  value={reglastname}
+                  onChange={handleChange}
+                />
               </Box>
-             
+
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -266,44 +262,41 @@ export default function SignIn() {
                 id="email"
                 label="Email Address"
                 autoComplete="off"
-                
                 name="regemail"
                 value={regemail}
                 onChange={handleChange}
               />
-              <Box style={{display:"flex" ,alignItems:"center"}}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                label="Username"
-                type="text"
-                id="regusername"
-                autoComplete="off"
-                name="regusername"
-                value={regusername}
-                onChange={handleChange}
-              />
-              &nbsp;
-
+              <Box style={{ display: "flex", alignItems: "center" }}>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  label="Username"
+                  type="text"
+                  id="regusername"
+                  autoComplete="off"
+                  name="regusername"
+                  value={regusername}
+                  onChange={handleChange}
+                />
+                &nbsp;
                 <label
-                for="photo"
-                style={{
-                  border: "1px solid #ccc",
-                  display: "inline-block",
-                  padding: "6px 12px",
-                  cursor: "pointer",
-                  height:"55px",
-                  marginTop:"15px",
-                  width:"50%"
-                }}
-                class="custom-file-upload"
-              >
-                <AddPhotoAlternateOutlinedIcon  fontSize="large" />
-
-              </label>
+                  for="photo"
+                  style={{
+                    border: "1px solid #ccc",
+                    display: "inline-block",
+                    padding: "6px 12px",
+                    cursor: "pointer",
+                    height: "55px",
+                    marginTop: "15px",
+                    width: "50%",
+                  }}
+                  class="custom-file-upload"
+                >
+                  <AddPhotoAlternateOutlinedIcon fontSize="large" />
+                </label>
               </Box>
-              
+
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -330,8 +323,8 @@ export default function SignIn() {
                 value={regpassword}
                 onChange={handleChange}
               />
-            
-              <TextField
+
+              <input
                 variant="outlined"
                 margin="normal"
                 required
@@ -343,6 +336,8 @@ export default function SignIn() {
                 name="photo"
                 value={photo}
                 onChange={handleChange}
+                accept="image/png, image/gif, image/jpeg"
+
               />
               <CountrySelect
                 label="Country"
