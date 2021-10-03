@@ -7,15 +7,9 @@ import IconButton from "@mui/material/IconButton";
 import { Link } from "react-router-dom";
 import PersonIcon from "@mui/icons-material/Person";
 import HomeIcon from "@mui/icons-material/Home";
-import { useContext } from "react";
-import SessionContext from "./session/SessionContext";
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { useEffect } from "react";
 export default function ButtonAppBar() {
-  const {
-    
-    actions: {  loggedin },
-  } = useContext(SessionContext);
 
   useEffect(() => {
     // Update the document title using the browser API
@@ -23,7 +17,6 @@ export default function ButtonAppBar() {
 
   return (
     <>
-      {loggedin ? (
         <Box sx={{ flexGrow: 1 }}>
           <AppBar style={{ backgroundColor: "white  " }} position="fixed">
             <Toolbar>
@@ -48,7 +41,7 @@ export default function ButtonAppBar() {
             </Toolbar>
           </AppBar>
         </Box>
-      ) : null}
+      
     </>
   );
 }

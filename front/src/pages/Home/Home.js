@@ -1,78 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
-import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import React, { useEffect, useState } from "react";
+
 import SessionContext from "../../components/session/SessionContext";
 import { useContext } from "react";
-import { TextField } from "@mui/material";
 import api from "../../components/API/API";
-import { Button } from "@material-ui/core";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
+
 import { countries } from "country-data";
-import theme from "../../components/Style/Style";
 import { Pagination } from "@mui/material";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
-import { useScrollBy } from "react-use-window-scroll";
-
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import "./Home.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
-import FlightLandIcon from "@mui/icons-material/FlightLand";
-import SendIcon from "@mui/icons-material/Send";
-import LocalMallIcon from "@mui/icons-material/LocalMall";
-import Storage from "../../components/API/Storage";
-import FlightIcon from "@mui/icons-material/Flight";
 import moment from "moment";
 import Loading2 from "../../components/Loading/Loading2";
-import { Link } from "react-router-dom";
 import OrderCard from "../../components/OrderCard/OrderCard";
-const useStyles = makeStyles((theme) => ({
-  parent: {
-    marginTop: 20,
-    marginLeft: 20,
-    backgroundColor: "white",
-    color: "#1976d2",
-  },
-  root: {
-    maxWidth: 100,
-    marginBottom: 20,
-    height: 100,
-    display: "flex",
-  },
-  media: {
-    height: 0,
-    paddingTop: "56.25%", // 16:9
-  },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
-}));
-
+import Header from '../../components/Header'
+import Storage from '../../components/API/Storage'
 export default function RecipeReviewCard(props) {
   const [postdata, setData] = useState([]);
-  const [myorder, setorder] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(1);
-  const scrollBy = useScrollBy();
 
 
   const [wheight, setwheight] = useState(1);
@@ -105,8 +51,7 @@ export default function RecipeReviewCard(props) {
     session: { user },
   } = useContext(SessionContext);
 
-  const { id, photo } = user;
-  const classes = useStyles();
+  const { id, } = user;
   const handleChange = (event, value) => {
     setPage(value);
   };
@@ -120,29 +65,34 @@ export default function RecipeReviewCard(props) {
       const total = response.data.total;
       setTotal(Math.ceil(total / 8));
       setData(data);
-      scrollBy(0, 0)
 
     }
 
-    const getorder = async () => {
-      const { data } = await api.get(`/myorder/${id}`);
-      setorder(data);
-    };
-    getorder();
+    // const getorder = async () => {
+    //   const { data } = await api.get(`/myorder/${id}`);
+    //   setorder(data);
+    // };
+    // getorder();
     fetchData();
   }, [id, page]);
-  if (postdata === undefined || postdata.length == 0) {
+  if (postdata === undefined || postdata.length === 0) {
     return (
+      <>
+              <Header />
+
       <div style={{ marginTop: 150 }}>
         <Loading2 />
         <h1 style={{ color: "#007bff" }}>There are no new flights Available</h1>
         <SentimentVeryDissatisfiedIcon fontSize="large" />
 
       </div>
-
+</>
     );
   }
   return (
+    <>
+          <Header />
+
     <center>
       <br />
       <br />
@@ -159,7 +109,7 @@ export default function RecipeReviewCard(props) {
               fullname={post.name + " " + post.lastname}
               change={(e) => console.log(e.target.value)}
               post_date={post.post_date}
-              avatar={Storage + post.photo}
+              avatar={Storage+ post.photo}
               from_country={countries[post.from_country].name}
               to_country={countries[post.to_country].name}
               from_country_code={post.from_country}
@@ -167,6 +117,8 @@ export default function RecipeReviewCard(props) {
               note={(e) => setdescription(e.target.value)}
               wheight={(e) => setwheight(e.target.value)}
               order={(postid) => neworder(post.id)}
+              wheight1="1"
+              note1=""
             />
           );
         })}
@@ -178,5 +130,6 @@ export default function RecipeReviewCard(props) {
         onChange={handleChange}
       />
     </center>
+    </>
   );
 }

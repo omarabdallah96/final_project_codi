@@ -48,7 +48,7 @@ class BlogController extends Controller
 
         
         ->whereNotIn('user_id', [$id])
-        ->where('posts.date_depart', '>=', date('Y-m-d'))
+        ->where('posts.date_depart', '>', date('Y-m-d'))
 
         
         
@@ -78,6 +78,11 @@ class BlogController extends Controller
        
        ->get();
 
+    }
+    public function allpost(){
+        return Blog::join('users','users.id','=','user_id')->
+        
+        get();
     }
 
 }

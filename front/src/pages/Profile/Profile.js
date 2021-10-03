@@ -12,17 +12,12 @@ import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import { red } from "@mui/material/colors";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Header from '../../components/Header'
 import api from "../../components/API/API";
 import { Button } from "@material-ui/core";
 import Storage from "../../components/API/Storage";
-import { Paper } from "@mui/material";
 import { toast } from "react-toastify";
-import { style } from "@mui/system";
 import { countries } from "country-data";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditIcon from "@mui/icons-material/Edit";
-import moment from "moment";
 import CountrySelect from "../../components/country/countrylist";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
@@ -40,7 +35,6 @@ import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import WhatsApp from "@mui/icons-material/WhatsApp";
 import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 import NoteAltOutlinedIcon from "@mui/icons-material/NoteAltOutlined";
-import DeleteOutline from "@mui/icons-material/DeleteOutline";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -210,6 +204,7 @@ export default function BasicTabs() {
     const getreceivdorder = async () => {
       const { data } = await api.get(`/postorder/${id}`);
       setReceivd(data);
+      console.log(data);
     };
     const getmyinfo = async () => {
       const { data } = await api.get(`/user`);
@@ -234,6 +229,8 @@ export default function BasicTabs() {
   }, [id, alignment]);
 
   return (
+    <>
+    <Header />
     <Box sx={{ width: "100%", background: "white" }}>
       <center>
         <br />
@@ -251,8 +248,7 @@ export default function BasicTabs() {
           {photo ? (
             <Avatar
               sx={{ width: 56, height: 56 }}
-              alt={Storage + "avatar.png"}
-              src={Storage + state.photo}
+              src={Storage+photo}
               aria-label="recipe"
             ></Avatar>
           ) : (
@@ -313,6 +309,8 @@ export default function BasicTabs() {
                     to_country_code={post.to_country}
                     // note={(e) => setdescription(e.target.value)}
                     delete={(postid) => updatedpost(post.id)}
+                    wheight1={post.space}
+                    note1={post.note}
                   />
                 </>
               ))
@@ -598,7 +596,7 @@ export default function BasicTabs() {
                           color="secondary"
                           style={{ outline: "none", background: "seconday" }}
                           onClick={(e) =>
-                            updateorder(myorder.post_id, e.currentTarget.name)
+                            updateorder(myorder.order_id, e.currentTarget.name)
                           }
                         >
                           <HighlightOffOutlinedIcon />
@@ -609,11 +607,12 @@ export default function BasicTabs() {
                           variant="outlined"
                           style={{ outline: "none", background: "#007bff" }}
                           onClick={(e) =>
-                            updateorder(myorder.post_id, e.currentTarget.name)
+                            updateorder(myorder.order_id, e.currentTarget.name)
                           }
                         >
                           <CheckOutlinedIcon style={{ color: "white" }} />
                         </Button>
+
                       </Typography>
                     </Typography>
                   </CardContent>
@@ -742,22 +741,20 @@ export default function BasicTabs() {
                          color="secondary"
                          style={{ outline: "none", background: "seconday" }}
                          onClick={(e) =>
-                           updateorder(myorder.post_id, e.currentTarget.name)
-                         }
+                          deleteOrder(myorder.order_id)
+                        }
                        >
                          <HighlightOffOutlinedIcon />
                        </Button>
                        &nbsp; &nbsp;
-                       <Button
+                       {/* <Button
                          name="accepted"
                          variant="outlined"
                          style={{ outline: "none", background: "#007bff" }}
-                         onClick={(e) =>
-                           updateorder(myorder.post_id, e.currentTarget.name)
-                         }
+                        
                        >
                          <CheckOutlinedIcon style={{ color: "white" }} />
-                       </Button>
+                       </Button> */}
                      </Typography>
                    </Typography>
                  </CardContent>
@@ -790,5 +787,6 @@ export default function BasicTabs() {
         )}
       </TabPanel>
     </Box>
+    </>
   );
 }

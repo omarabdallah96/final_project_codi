@@ -169,5 +169,8 @@ class AuthController extends Controller
         "image"=>"image not deleted deleted"
     ]);
     }
+    public function alluser(){
+        return User::all();
+    }
 
 }

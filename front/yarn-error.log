@@ -1,5 +1,5 @@
 Arguments: 
-  /home/omar/.nvm/versions/node/v14.17.1/bin/node /usr/local/bin/yarn add @mui/lab/TabContext
+  /home/omar/.nvm/versions/node/v14.17.1/bin/node /usr/local/bin/yarn add @material-ui/data-grid
 
 PATH: 
   /home/omar/.nvm/versions/node/v14.17.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/opt/lampp/bin/php:/snap/bin
@@ -14,17 +14,8 @@ Platform:
   linux x64
 
 Trace: 
-  Error: https://registry.npmjs.org/@mui%2flab/TabContext: Request "https://registry.npmjs.org/@mui%2flab/TabContext" returned a 405
-      at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:66997:18)
-      at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:140662:22)
-      at Request.emit (events.js:375:28)
-      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141634:10)
-      at Request.emit (events.js:375:28)
-      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141556:12)
-      at Object.onceWrapper (events.js:481:28)
-      at IncomingMessage.emit (events.js:387:35)
-      at endReadableNT (internal/streams/readable.js:1317:12)
-      at processTicksAndRejections (internal/process/task_queues.js:82:21)
+  Error: getaddrinfo EAI_AGAIN registry.yarnpkg.com
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:69:26)
 
 npm manifest: 
   {
@@ -35,6 +26,7 @@ npm manifest:
       "@emotion/react": "^11.4.1",
       "@emotion/styled": "^11.3.0",
       "@material-ui/core": "^4.12.3",
+      "@material-ui/data-grid": "^4.0.0-alpha.37",
       "@material-ui/icons": "^4.11.2",
       "@mui/icons-material": "^5.0.0",
       "@mui/material": "^5.0.0",
@@ -46,12 +38,14 @@ npm manifest:
       "loading-css": "^0.2.0",
       "material-ui": "^0.20.2",
       "moment": "^2.29.1",
+      "rc-tabs": "^11.10.1",
       "react": "^17.0.2",
       "react-dom": "^17.0.2",
       "react-loader-spinner": "^4.0.0",
       "react-router-dom": "^5.3.0",
       "react-scripts": "4.0.3",
       "react-toastify": "^7.0.4",
+      "react-use-window-scroll": "^1.0.13",
       "web-vitals": "^1.1.2"
     },
     "scripts": {

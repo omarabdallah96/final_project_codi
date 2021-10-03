@@ -125,7 +125,7 @@ class OrderController extends Controller
          join('posts','posts.id','=','post_id')
          ->join('users','users.id','=','orders.user_re_id')
 
-         ->where('posts.user_id',$id)->get()
+         ->where('posts.user_id',$id)->get(['orders.id as order_id','users.*','posts.*','orders.*'])
          ;
 
 

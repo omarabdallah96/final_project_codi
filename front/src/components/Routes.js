@@ -5,12 +5,11 @@ import NotFound from "../pages/NotFound";
 import Account from "../pages/Account";
 import Home from "../pages//Home/Home";
 import Profile from "../pages/Profile/Profile";
-import Profile2 from "../pages/Profile/Profile2";
-
-
+import About from "../pages/About/About";
+import Contact from "../pages/Contact/Contact";
 import CreatePost from "../pages/Post/Createpost";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import HomeAdmin from '../pages/AdminPanel/HomeAdmin/HomeAdmin'
 
 export default function Routes() {
   const theme = createTheme({
@@ -21,9 +20,8 @@ export default function Routes() {
       },
       secondary: {
         // This is green.A700 as hex.
-        main: '#f50057',
+        main: "#f50057",
       },
-     
     },
   });
   const {
@@ -34,35 +32,45 @@ export default function Routes() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Switch>
+        <PublicRoute exact path="/account" component={Account} token={token} />
+        <PrivateRoute
+          role={role}
+          exact
+          path="/"
+          component={Home}
+          token={token}
+        />
 
-    <Switch>
-      <PublicRoute exact path="/account" component={Account} token={token} />
-      <PrivateRoute role={role} exact path="/" component={Home} token={token} />
-      <PrivateRoute role={role} exact path="/newpost" component={CreatePost} token={token} />
+        <PrivateRoute
+          role={role}
+          exact
+          path="/dashboard"
+          component={HomeAdmin}
+          token={token}
+        />
+        <PrivateRoute
+          role={role}
+          exact
+          path="/newpost"
+          component={CreatePost}
+          token={token}
+        />
 
-      
-       <PrivateRoute
-        role={role}
-        path="/profile2"
-        component={Profile2
-        }
-        token={token}
-      />
-      <PrivateRoute
-        role={role}
-        exact
-        path="/profile"
-        component={Profile}
-        token={token}
-      />
-      <Route
-        component={NotFound}
-      />
+        <PrivateRoute
+          role={role}
+          exact
+          path="/profile"
+          component={Profile}
+          token={token}
+        />
+        <PublicRoute exact path="/account" component={Account} token={token} />
 
-
-    </Switch>
+        <PublicRoute path="/about" exact token={token} component={About} />
+        <PublicRoute path="/contact" exact component={Contact} />
+        <Route  component={HomeAdmin} />
+      </Switch>
     </ThemeProvider>
-
   );
 }
 function PublicRoute({ path, component: Component, token, ...props }) {

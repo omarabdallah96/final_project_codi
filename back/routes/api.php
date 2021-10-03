@@ -27,16 +27,11 @@ Route::post('/login', ['App\Http\Controllers\AuthController', 'login']);
 //Route::put('/blogs/{id}', [\App\Http\Controllers\BlogController::class, 'update']);
 //Route::delete('/blogs/{id}', [\App\Http\Controllers\BlogController::class, 'destroy']);
 Route::post('uploadimage', ['App\Http\Controllers\AuthController', 'uploadimage']);
-
-Route::get('postorder/{id}', ['App\Http\Controllers\OrderController', 'postorder']);
-
-Route::post('/updateprofile/{id}', ['App\Http\Controllers\AuthController', 'updateprofile']);
+Route::get('alluser/', ['App\Http\Controllers\AuthController', 'alluser']);
+Route::get('allpost/', ['App\Http\Controllers\BlogController', 'allpost']);
 
 
-Route::delete('deleteOrder/{id}', ['App\Http\Controllers\OrderController', 'deleteOrder']);
 
-Route::put('updateorder/{id}', ['App\Http\Controllers\OrderController', 'updateorder']);
-Route::get('myorder/{id}', ['App\Http\Controllers\OrderController', 'myorder']);
 
 Route::group(['middleware' => ['jwt.user']], function() {
     Route::post('/logout', ['App\Http\Controllers\AuthController', 'logout']);
@@ -50,7 +45,15 @@ Route::group(['middleware' => ['jwt.user']], function() {
     //my order
 
 
+    Route::get('postorder/{id}', ['App\Http\Controllers\OrderController', 'postorder']);
+
+    Route::post('/updateprofile/{id}', ['App\Http\Controllers\AuthController', 'updateprofile']);
     
+    
+    Route::delete('deleteOrder/{id}', ['App\Http\Controllers\OrderController', 'deleteOrder']);
+    
+    Route::put('updateorder/{id}', ['App\Http\Controllers\OrderController', 'updateorder']);
+    Route::get('myorder/{id}', ['App\Http\Controllers\OrderController', 'myorder']);    
 
 
 

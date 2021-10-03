@@ -1,14 +1,11 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CountrySelect from "../../components/country/countrylist";
 import moment from "moment";
 import api from "../../components/API/API";
@@ -16,10 +13,8 @@ import SessionContext from "../../components/session/SessionContext";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import NoteAltSharpIcon from "@mui/icons-material/NoteAltSharp";
-import FlightTakeoffSharpIcon from "@mui/icons-material/FlightTakeoffSharp";
 import Loading from "../../components/Loading/Loading";
-
-const theme = createTheme();
+import Header from '../../components/Header'
 
 export default function Create_Post(props) {
   const {
@@ -74,6 +69,8 @@ export default function Create_Post(props) {
   };
 
   return (
+    <>
+    <Header />
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Box
@@ -190,5 +187,6 @@ export default function Create_Post(props) {
         </Box>
       </Box>
     </Container>
+    </>
   );
 }

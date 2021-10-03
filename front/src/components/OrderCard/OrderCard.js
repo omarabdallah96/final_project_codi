@@ -1,21 +1,11 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { countries } from "country-data";
 import { Button, TextField } from "@material-ui/core";
 import SendIcon from "@mui/icons-material/Send";
 import WhatsApp from "@mui/icons-material/WhatsApp";
@@ -48,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function RecipeReviewCard(props) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
 
  
   return (
@@ -67,6 +56,7 @@ export default function RecipeReviewCard(props) {
               <a
                 href={`https://api.whatsapp.com/send?phone=${props.wplink}`}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <WhatsApp style={{color:"rgb(0, 123, 255)"}}/>
               </a>
@@ -121,7 +111,7 @@ export default function RecipeReviewCard(props) {
                 .slice(0, 2);
             }}
             type="number"
-            defaultValue="1"
+            defaultValue={props.wheight1}
             variant="outlined"
             size="small"
             onChange={props.wheight}
@@ -131,7 +121,7 @@ export default function RecipeReviewCard(props) {
           <TextField
             label="Note"
             type="text"
-            defaultValue=""
+            defaultValue={props.note1}
             variant="outlined"
             size="small"
             onChange={props.note}

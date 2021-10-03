@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import SessionContext from "./SessionContext";
 import { setCookie, getCookie, removeCookie } from "../../cookies";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { Redirect } from "react-router";
 import sessionapi from '../API/sessionapi'
 
@@ -23,7 +22,6 @@ export default function SessionProvider({ children }) {
   useEffect(() => {
     function initializeSession() {
       let token = getCookie("token");
-      let id = getCookie("id");
 
       if (token)
         fetch(`${sessionapi}api/user`, {
@@ -84,9 +82,7 @@ export default function SessionProvider({ children }) {
     }).then((res) => res.json());
     let role = result.role;
     console.log(result);
-    if (!result) {
-      logout()
-    }
+   
 
     let user = { ...result, token, role };
 
@@ -95,10 +91,9 @@ export default function SessionProvider({ children }) {
   }
 
   function logout() {
-    setLoggedin(false);
     removeCookie("id");
     removeCookie("token");
-    updateSession({ user: { token: null } });
+    updateSession({ user: { token: null ,id:null} });
 
   }
   // async function register(email, username, password) {

@@ -15,14 +15,16 @@ import CountrySelect from "../components/country/countrylist";
 import { Box } from "@mui/system";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { toast } from "react-toastify";
-import Loading from "../components/Loading/Loading";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
+  root: {},
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    backgroundImage: `url(https://static.remove.bg/remove-bg-web/8fb1a6ef22fefc0b0866661b4c9b922515be4ae9/assets/start_remove-c851bdf8d3127a24e2d137a55b1b427378cd17385b01aec6e59d5d4b5f39d2ec.png})`,
   },
   avatar: {
     margin: theme.spacing(1),
@@ -60,7 +62,7 @@ export default function SignIn() {
 
   const classes = useStyles();
   const {
-    actions: { login, register },
+    actions: { login },
   } = useContext(SessionContext);
 
   const [state, setValue] = useState({
@@ -84,7 +86,6 @@ export default function SignIn() {
     photo,
     regname,
     reglastname,
-    regcountry,
     phone,
   } = state;
 
@@ -109,8 +110,8 @@ export default function SignIn() {
     event.preventDefault();
     const fileInput = document.querySelector("#photo");
     const formData = new FormData();
-    const email=regemail;
-    const password=regpassword
+    const email = regemail;
+    const password = regpassword;
     formData.append("name", regname);
     formData.append("lastname", reglastname);
     formData.append("username", regusername);
@@ -124,17 +125,7 @@ export default function SignIn() {
     formData.append("role", "user");
 
     formData.append("address", selectdcountry);
-    const body = {
-      name: regname,
-      lastname: reglastname,
-      username: regusername,
-      phone: phone,
-      email: regemail,
-      password: regpassword,
-      status: regpassword,
-      photo: fileInput,
-      role: "user",
-    };
+
     console.log(formData);
     try {
       await api.post("/uploadimage", formData, {
@@ -144,18 +135,22 @@ export default function SignIn() {
         },
       });
       toast.success(`Welcome ${regname}`);
-      await     login({email,password});
-
+      await login({ email, password });
     } catch (error) {
       toast.error("Please Your Inputs");
     }
-
   };
 
   return (
-    <div>
+    <div   
+    >
       {account ? (
-        <Container className={classes.root} component="main" maxWidth="xs">
+        <Container
+        
+          className={classes.root}
+          component="main"
+          maxWidth="xs"
+        >
           <CssBaseline />
 
           <div className={classes.paper}>
@@ -337,7 +332,6 @@ export default function SignIn() {
                 value={photo}
                 onChange={handleChange}
                 accept="image/png, image/gif, image/jpeg"
-
               />
               <CountrySelect
                 label="Country"
@@ -371,6 +365,14 @@ export default function SignIn() {
           </div>
         </Container>
       )}
+      <Typography>
+        
+        <Link to="/about">About US</Link> &nbsp;
+        <Link to="/contact">Contact US</Link>
+
+      
+      
+      </Typography>
     </div>
   );
 }
